@@ -1,0 +1,18 @@
+[
+    {
+        "id": "088c1f64-b661-4ef8-aa77-a1ed69401d4b",
+        "name": "Mauri",
+        "email": "mauri@test.com",
+        "pass": "contraseña",
+        "createAt": "2022-04-21T23:04:07.290Z",
+        "updateAt": "2022-04-21T23:04:07.290Z"
+    },
+    {
+        "id": "cd0c0837-8506-4eb4-9274-ce23d892ceb8",
+        "name": "User1",
+        "email": "user1@test.com",
+        "pass": "contraseña",
+        "createAt": "2022-04-21T23:04:31.648Z",
+        "updateAt": "2022-04-21T23:04:31.648Z"
+    }
+]
