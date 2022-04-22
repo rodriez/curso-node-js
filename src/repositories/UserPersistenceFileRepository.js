@@ -33,8 +33,17 @@ export default class UserPeristenceFileRepository {
      */
     add(user) {
         this.collection.push(user)
+        
+        const folder = path.dirname(this.filePath)
+        if(!fs.existsSync(folder)){
+            fs.mkdirSync(folder)
+        }
 
         fs.writeFileSync(this.filePath, JSON.stringify(this.collection))
+    }
+
+    getUsers(){
+        return this.collection
     }
 
     load() {

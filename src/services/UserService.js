@@ -73,4 +73,18 @@ export default class UserService {
             throw Error("Invalid user password")
         }
     }
+
+
+    getUsers(){
+        const allUsers = this.userPersistence.getUsers()
+
+        for (const i of allUsers) {
+            delete(i.pass)
+            delete(i.createAt)
+            delete(i.updateAt)
+        }
+
+        return allUsers
+    }
+
 }

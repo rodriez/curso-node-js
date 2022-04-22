@@ -1,10 +1,13 @@
-import UserService from "./services/UserService.js";
-import UserPeristenceFileRepository from "./repositories/UserPersistenceFileRepository.js";
+import UserHandler from './handlers/UserHandler.js'
+import yargs from 'yargs'
+import { hideBin } from 'yargs/helpers'
 
-const userPersitenceRepo = new UserPeristenceFileRepository('data.json')
-const userService = new UserService(userPersitenceRepo);
+const app = yargs(hideBin(process.argv))
+.command('addUser [name] [email] [pass]', 'Register a new user.',{}, UserHandler.addUser)
+.command('showUsers', 'Show all users.',{}, UserHandler.showUsers)
+
 try {
-    userService.addUser({ name: "User1", email: "user1@test.com", pass: "contraseña" })
-} catch (e) {
-    console.log(e.message)
+    app.parse()
+} catch (error) {
+    console.log(error)
 }

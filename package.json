@@ -11,6 +11,7 @@
   "type": "module",
   "dependencies": {
     "lodash": "^4.17.21",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "yargs": "^17.4.1"
   }
 }
