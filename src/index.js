@@ -1,6 +1,7 @@
 import UserHandler from './handlers/UserHandler.js'
-import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
+import yargs from 'yargs'
+
 
 const app = yargs(hideBin(process.argv))
 .command('addUser [name] [email] [pass]', 'Register a new user.',{}, UserHandler.addUser)

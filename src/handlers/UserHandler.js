@@ -1,6 +1,10 @@
+import dotenv from 'dotenv'
 import UserService from "../services/UserService.js";
 import UserPersistenceFileRepository from "../repositories/UserPersistenceFileRepository.js";
-const userPersitenceRepo = new UserPersistenceFileRepository('data/db.json')
+
+dotenv.config()
+
+const userPersitenceRepo = new UserPersistenceFileRepository(process.env.DB_FILE)
 const userService = new UserService(userPersitenceRepo);
 
 export default class UserHandler {
