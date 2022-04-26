@@ -4,10 +4,11 @@ import UserPersistenceFileRepository from "../repositories/UserPersistenceFileRe
 
 dotenv.config()
 
-const userPersitenceRepo = new UserPersistenceFileRepository(process.env.DB_FILE)
+const userPersitenceRepo = new UserPersistenceFileRepository(process.env.DB_USER)
 const userService = new UserService(userPersitenceRepo);
 
 export default class UserHandler {
+    
     static addUser(request){
         try {
             userService.addUser(request)
@@ -24,5 +25,16 @@ export default class UserHandler {
         } catch (e) {
             console.log(e.message)
         }
+    }
+
+    static getUserId() {
+        return ""
+       /*try {
+            const userID =userService.getUserId()
+            console.log(userID)
+            
+        } catch (e) {
+            console.log(e.message)
+        }*/
     }
 }

@@ -42,6 +42,10 @@ export default class UserPeristenceFileRepository {
         fs.writeFileSync(this.filePath, JSON.stringify(this.collection))
     }
 
+    /*getUserId(user) {
+        return user.id
+    }*/
+
     getUsers(){
         return this.collection
     }
