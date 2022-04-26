@@ -8,6 +8,7 @@ const userPersitenceRepo = new UserPersistenceFileRepository(process.env.DB_USER
 const userService = new UserService(userPersitenceRepo);
 
 export default class UserHandler {
+    
     static addUser(request){
         try {
             userService.addUser(request)
@@ -27,7 +28,8 @@ export default class UserHandler {
     }
 
     static getUserId() {
-       /* try {
+        return ""
+       /*try {
             const userID =userService.getUserId()
             console.log(userID)
             
