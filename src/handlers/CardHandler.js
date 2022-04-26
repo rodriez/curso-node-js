@@ -20,7 +20,7 @@ export default class CardHandler {
 
 
     static showCard(req) {
-    
+
         try {
             const card = cardService.getCardById(req.id)
             console.clear()

@@ -55,4 +55,8 @@ export default class CardPeristenceFileRepository {
         throw Error("Not found")
     }
 
+    all() {
+        return this.collection
+    }
+
 }

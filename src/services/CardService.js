@@ -1,12 +1,14 @@
 import UserService from "../services/UserService.js";
 import * as uuid from 'uuid'
 
-const STATUS_PENDING = "Pending"
-const STATUS_DONE="Done"
-const STATUS_IN_PROGRESS= "In Progress"
+export const STATUS_PENDING = "Pending"
+export const STATUS_DONE="Done"
+export const STATUS_IN_PROGRESS= "In Progress"
 const validStatuses = [STATUS_PENDING, STATUS_IN_PROGRESS, STATUS_DONE]
 
 /** 
+ * @typedef {object} CardPersistence
+ * 
 * @typedef {object} card
 * @param {string=} title
 * @param {string=} description
