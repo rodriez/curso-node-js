@@ -74,11 +74,6 @@ export default class CardService {
 
             throw Error("Invalid userId")
         }
-
-        /*if (req ?.status === "" || !validStatuses.includes(req.status)) {
-
-            throw Error("Invalid state")
-        }*/
     }
 
     getCardById(id){
@@ -95,5 +90,24 @@ export default class CardService {
         return allCards
     }
 
+    updateStatus(id, status) {
+        this.checkUpdateStatusRequest(id, status)
+
+        if (!this.cardPersistence.exists({id:id})) {
+            throw Error("Card not found")
+        }
+
+        this.cardPersistence.updateStatus(id, status)
+    }
+
+    checkUpdateStatusRequest(id, status) {
+        if (id === "") {
+            throw Error("Invalid card id")
+        }
+
+        if (status === "" || !validStatuses.includes(status)) {
+            throw Error("Invalid state")
+        }
+    }
 }
 

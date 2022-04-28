@@ -24,6 +24,10 @@ export default class CardPeristenceFileRepository {
     addCard(card) {
         this.collection.push(card)
 
+        this.save()
+    }
+
+    save() {
         const folder = path.dirname(this.filePath)
         if (!fs.existsSync(folder)) {
             fs.mkdirSync(folder)
@@ -59,4 +63,17 @@ export default class CardPeristenceFileRepository {
         return this.collection
     }
 
+    exists(criteria) {
+        const idx = lodash.findIndex(this.collection, criteria)
+
+        return (idx >= 0)
+    }
+
+    updateStatus(id, status) {
+        const idx = lodash.findIndex(this.collection, { id: id })
+
+        this.collection[idx].status = status
+
+        this.save()
+    }
 }

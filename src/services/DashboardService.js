@@ -11,9 +11,9 @@ export default class DashboardService {
         const cards = this.cardPersistence.all()
 
         const dashboard = {
-            pending: cards.filter((c) => c.status == STATUS_PENDING),
-            inProgress: cards.filter((c) => c.status == STATUS_IN_PROGRESS),
-            done:  cards.filter((c) => c.status == STATUS_DONE)
+            pending: cards.filter((c) => c.status === STATUS_PENDING),
+            inProgress: cards.filter((c) => c.status === STATUS_IN_PROGRESS),
+            done:  cards.filter((c) => c.status === STATUS_DONE)
         }
 
         this.dashboardPresenter.present(dashboard)
