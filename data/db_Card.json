@@ -1,9 +1,1 @@
-[{
-    "id": "7be33959",
-    "userId": "e4940b90-ae37-4222-bd19-92ef410a5903",
-    "title": "Lavar el auto",
-    "description": " paso 1 paso2 pason",
-    "status": "Pending",
-    "createAt": "2022-04-26T22:13:03.634Z",
-    "updateAt": "2022-04-26T22:13:03.634Z"
-}]
+[{"id":"7be33959","userId":"e4940b90-ae37-4222-bd19-92ef410a5903","title":"Lavar el auto","description":" paso 1 paso2 pason","status":"Pending","createAt":"2022-04-26T22:13:03.634Z","updateAt":"2022-04-26T22:13:03.634Z"},{"id":"1a1cae64","userId":"e4940b90-ae37-4222-bd19-92ef410a5903","title":"Hacer un abdominal","description":"algo algo algo","status":"Done","createAt":"2022-04-28T21:27:48.542Z","updateAt":"2022-04-28T21:27:48.542Z"},{"id":"6d40be78","userId":"e4940b90-ae37-4222-bd19-92ef410a5903","title":"Programar bien","description":"algo algo algo","status":"Done","createAt":"2022-04-28T22:36:15.492Z","updateAt":"2022-04-28T22:36:15.492Z"}]
