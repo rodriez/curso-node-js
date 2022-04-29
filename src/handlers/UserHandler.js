@@ -37,4 +37,14 @@ export default class UserHandler {
             console.log(e.message)
         }*/
     }
+
+    static changeUser(req){
+        try {
+            userService.updateUser(req)
+            UserHandler.showUsers()
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+    
 }

@@ -52,6 +52,35 @@ export default class UserService {
 
         this.userPersistence.add(user)
     }
+    updateUser(req){
+        this.checkUpdateUserRequest(req)
+        //req ? req.email : ''
+        if (this.userPersistence.exists({ email: req?.email })) {
+            throw Error("the email is already in use")
+        }
+        const validatedRequest = {
+            id: req.id,
+            name: req.name,
+            email: req.email,
+            pass: req.pass
+        }
+        this.userPersistence.update(validatedRequest)
+    }
+
+    checkUpdateUserRequest(req){
+        if (req?.id == undefined || req?.id.trim() == '') {
+            throw Error('Invalid user Id')
+        }
+        if (req.name != undefined && req.name == '') {
+            throw Error('Invalid user name')
+        }
+        if (req.email != undefined && req.email == '') {
+            throw Error('Invalid user email')
+        }
+        if (req.pass != undefined && req.pass == '') {
+            throw Error('Invalid user password')
+        }
+    }
 
     /**@private */
     checkAddUserRequest(req) {
