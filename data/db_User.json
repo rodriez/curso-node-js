@@ -1,1 +1,18 @@
-[{"id":"e4940b90-ae37-4222-bd19-92ef410a5903","name":"Agustin","email":"test2@gmail.com","pass":"test23","createAt":"2022-04-26T22:07:33.773Z","updateAt":"2022-04-26T22:07:33.773Z"},{"id":"b2bac57f-a692-45d9-8939-f8fd74844461","name":"jose","email":"jose@jose.com","pass":123456,"createAt":"2022-04-29T20:11:14.545Z","updateAt":"2022-04-29T20:11:14.545Z"}]
+[
+    {
+        "id": "e4940b90-ae37-4222-bd19-92ef410a5903",
+        "name": "Agustin",
+        "email": "test2@gmail.com",
+        "pass": "test23",
+        "createAt": "2022-04-26T22:07:33.773Z",
+        "updateAt": "2022-04-26T22:07:33.773Z"
+    },
+    {
+        "id": "b2bac57f-a692-45d9-8939-f8fd74844461",
+        "name": "jose",
+        "email": "jose@jose.com",
+        "pass": 123456,
+        "createAt": "2022-04-29T20:11:14.545Z",
+        "updateAt": "2022-04-29T20:11:14.545Z"
+    }
+]

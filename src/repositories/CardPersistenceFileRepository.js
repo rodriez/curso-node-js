@@ -73,6 +73,7 @@ export default class CardPeristenceFileRepository {
         const idx = lodash.findIndex(this.collection, { id: id })
 
         this.collection[idx].status = status
+        this.collection[idx].updateAt = new Date()
 
         this.save()
     }

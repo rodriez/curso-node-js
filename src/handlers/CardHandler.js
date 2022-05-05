@@ -3,12 +3,16 @@ import CardService, { STATUS_DONE, STATUS_IN_PROGRESS, STATUS_PENDING } from "..
 import CardPersistenceFileRepository from "../repositories/CardPersistenceFileRepository.js";
 import DashboardService from '../services/DashboardService.js';
 import DashboardPresenterRepository from '../repositories/DashboardPresenterRepository.js';
+import UserService from '../services/UserService.js';
+import UserPeristenceFileRepository from '../repositories/UserPersistenceFileRepository.js';
 
 dotenv.config()
 
+const userPersistenceRepo = new UserPeristenceFileRepository(process.env.DB_USER)
+const userService = new UserService(userPersistenceRepo)
 const dashboardPresenterRepo = new DashboardPresenterRepository()
 const cardPersitenceRepo = new CardPersistenceFileRepository(process.env.DB_CARD)
-const cardService = new CardService(cardPersitenceRepo);
+const cardService = new CardService(cardPersitenceRepo, userService);
 const dashboardService = new DashboardService(cardPersitenceRepo, dashboardPresenterRepo)
 
 export default class CardHandler {
@@ -24,9 +28,9 @@ export default class CardHandler {
 
 
     static showCard(req) {
-
         try {
             const card = cardService.getCardById(req.id)
+            
             console.clear()
             console.log(card)
 

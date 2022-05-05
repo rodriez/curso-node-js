@@ -27,17 +27,6 @@ export default class UserHandler {
         }
     }
 
-    static getUserId() {
-        return ""
-       /*try {
-            const userID =userService.getUserId()
-            console.log(userID)
-            
-        } catch (e) {
-            console.log(e.message)
-        }*/
-    }
-
     static changeUser(req){
         try {
             userService.updateUser(req)

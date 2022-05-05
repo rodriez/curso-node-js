@@ -1,4 +1,3 @@
-import UserService from "../services/UserService.js";
 import * as uuid from 'uuid'
 
 export const STATUS_PENDING = "Pending"
@@ -20,13 +19,15 @@ export default class CardService {
     /**
     * 
     * @param {CardPersistence} cardPersistence 
+    * @param {*} userService 
     */
 
-    constructor(cardPersistence) {
+    constructor(cardPersistence, userService) {
        
         /**@private */
         this.cardPersistence = cardPersistence
 
+        this.userService = userService
     }
 
     /**
@@ -76,9 +77,18 @@ export default class CardService {
         }
     }
 
-    getCardById(id){
+    getCardById(id) {
+        const card = this.cardPersistence.getCardById(id)
+        const user = this.userService.getUserById(card.userId)
 
-        return this.cardPersistence.getCardById(id)
+        delete(card.userId)
+        delete(user.pass)
+        delete(user.createAt)
+        delete(user.updateAt)
+
+        card.user = user
+
+        return card
     }
 
     getCards(){

@@ -3,6 +3,7 @@ import * as uuid from 'uuid'
  * @typedef {object} UserSearchCriteria
  * @property {string=} id
  * @property {string=} email
+ * 
  * @typedef {object} User
  * @property {string=} id
  * @property {string=} name
@@ -10,6 +11,7 @@ import * as uuid from 'uuid'
  * @property {string=} pass
  * @property {Date=} createAt
  * @property {Date=} updateAt
+ * 
  * @typedef {object} UserPersistence
  * @property {function(UserSearchCriteria):boolean} exists - This function validate if the user is already registered
  * @property {function(User):void} add - This function write a new user in the database
@@ -52,7 +54,7 @@ export default class UserService {
 
         this.userPersistence.add(user)
     }
-    updateUser(req){
+    updateUser(req) {
         this.checkUpdateUserRequest(req)
         //req ? req.email : ''
         if (this.userPersistence.exists({ email: req?.email })) {
@@ -67,6 +69,7 @@ export default class UserService {
         this.userPersistence.update(validatedRequest)
     }
 
+    /**@private */
     checkUpdateUserRequest(req){
         if (req?.id == undefined || req?.id.trim() == '') {
             throw Error('Invalid user Id')
@@ -97,11 +100,6 @@ export default class UserService {
         }
     }
 
-    getUserId(){
-       //this.userPersistence.getUserId()
-
-    }
-
     getUsers(){
         const allUsers = this.userPersistence.getUsers()
         for (const i of allUsers) {
@@ -110,6 +108,10 @@ export default class UserService {
             delete(i.updateAt)
         }
         return allUsers
+    }
+
+    getUserById(id) {
+        return this.userPersistence.getUserById(id)
     }
 
 }
