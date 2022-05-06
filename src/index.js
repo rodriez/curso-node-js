@@ -12,7 +12,7 @@ const app = yargs(hideBin(process.argv))
 .command('moveToPending [id]', 'Move Card to Pending Column.',{}, CardHandler.moveToPending)
 .command('moveToDone [id]', 'Move Card to In Done Column.',{}, CardHandler.moveToDone)
 .command('addCard [title] [description] [userId]', 'Register a new card.',{}, CardHandler.addCard)
-.command('showDashboard', 'Show the dashboard.',{}, DashboardHandler.showDashboard)
+.command('showDashboard [userId]', 'Show the dashboard.',{}, DashboardHandler.showDashboard)
 .command('changeUserPassword [id] [pass]','Change user password',{},UserHandler.changeUser)
 .command('changeUser [id] [name] [email]','Change user',{},UserHandler.changeUser)
 

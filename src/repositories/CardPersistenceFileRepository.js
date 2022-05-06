@@ -77,4 +77,8 @@ export default class CardPeristenceFileRepository {
 
         this.save()
     }
+
+    search(criteria) {
+        return lodash.filter(this.collection, criteria)
+    }
 }

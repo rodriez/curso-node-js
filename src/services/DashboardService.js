@@ -2,13 +2,21 @@ import { STATUS_PENDING, STATUS_IN_PROGRESS, STATUS_DONE } from "../services/Car
 
 export default class DashboardService {
 
-    constructor(cardService, dashboardPresenter) {
-        this.cardService = cardService
+    constructor(cardPersistence, dashboardPresenter, userPersistence) {
+        this.cardPersistence = cardPersistence
         this.dashboardPresenter = dashboardPresenter
+        this.userPersistence = userPersistence
     }
 
-    showDashboard() {
-        const cards = this.cardService.all()
+    showDashboard(req) {
+        let cards = []
+        if (req?.userId && !this.userPersistence.exists({id: req.userId})) {
+            throw Error("Invalid userId")
+        } else if (req?.userId) {
+            cards = this.cardPersistence.search({ userId: req.userId })
+        } else {
+            cards = this.cardPersistence.all()
+        }
 
         const dashboard = {
             pending: cards.filter((c) => c.status === STATUS_PENDING),

@@ -1,8 +1,8 @@
 import * as uuid from 'uuid'
 
 export const STATUS_PENDING = "Pending"
-export const STATUS_DONE="Done"
-export const STATUS_IN_PROGRESS= "In Progress"
+export const STATUS_DONE = "Done"
+export const STATUS_IN_PROGRESS = "In Progress"
 const validStatuses = [STATUS_PENDING, STATUS_IN_PROGRESS, STATUS_DONE]
 
 /** 
@@ -23,7 +23,7 @@ export default class CardService {
     */
 
     constructor(cardPersistence, userService) {
-       
+
         /**@private */
         this.cardPersistence = cardPersistence
 
@@ -63,15 +63,15 @@ export default class CardService {
 
     /**@private */
     checkAddCardRequest(req) {
-        if (req ?.title === "") {
+        if (req?.title === "") {
             throw Error("Invalid title")
         }
 
-        if (req ?.description === "") {
+        if (req?.description === "") {
             throw Error("Invalid description")
         }
 
-        if (req ?.userId === "") {
+        if (req?.userId === "") {
 
             throw Error("Invalid userId")
         }
@@ -81,21 +81,21 @@ export default class CardService {
         const card = this.cardPersistence.getCardById(id)
         const user = this.userService.getUserById(card.userId)
 
-        delete(card.userId)
-        delete(user.pass)
-        delete(user.createAt)
-        delete(user.updateAt)
+        delete (card.userId)
+        delete (user.pass)
+        delete (user.createAt)
+        delete (user.updateAt)
 
         card.user = user
 
         return card
     }
 
-    getCards(){
+    getCards() {
         const allCards = this.cardPersistence.getCards()
         for (const i of allCards) {
-            delete(i.createAt)
-            delete(i.updateAt)
+            delete (i.createAt)
+            delete (i.updateAt)
         }
         return allCards
     }
@@ -103,13 +103,14 @@ export default class CardService {
     updateStatus(id, status) {
         this.checkUpdateStatusRequest(id, status)
 
-        if (!this.cardPersistence.exists({id:id})) {
+        if (!this.cardPersistence.exists({ id: id })) {
             throw Error("Card not found")
         }
 
         this.cardPersistence.updateStatus(id, status)
     }
 
+    /**@private */
     checkUpdateStatusRequest(id, status) {
         if (id === "") {
             throw Error("Invalid card id")
