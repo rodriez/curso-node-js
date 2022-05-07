@@ -3,8 +3,12 @@ import * as path from 'path'
 import lodash from 'lodash'
 
 /**
+ * @typedef {import('../services/UserService').User} User
  * @typedef {import('../services/UserService').UserPersistence} UserPersistence
+ * @typedef {import('../services/DashboardService').DashboardUserPersistence} DashboardUserPersistence
+ * 
  * @implements {UserPersistence}
+ * @implements {DashboardUserPersistence}
  */
 export default class UserPeristenceFileRepository {
 
@@ -13,13 +17,16 @@ export default class UserPeristenceFileRepository {
      * @param {string} filePath 
      */
     constructor(filePath) {
+        /**@private */
         this.filePath = filePath
 
+        /**@private */
         this.collection = this.load()
     }
 
     /**
-     * @param {*} criteria 
+     * @param {User} criteria 
+     * 
      * @returns {boolean}
      */
     exists(criteria) {
@@ -29,7 +36,7 @@ export default class UserPeristenceFileRepository {
     }
 
     /**
-     * @param {*} user 
+     * @param {User} user 
      */
     add(user) {
         this.collection.push(user)
@@ -37,10 +44,18 @@ export default class UserPeristenceFileRepository {
         this.save()
     }
 
+    /**
+     * @returns {User[]}
+     */
     getUsers() {
         return this.collection
     }
 
+    /**
+     * @private
+     * 
+     * @returns {User[]}
+     */
     load() {
         if (fs.existsSync(this.filePath)) {
             const content = fs.readFileSync(this.filePath)
@@ -49,6 +64,12 @@ export default class UserPeristenceFileRepository {
 
         return []
     }
+
+    /**
+     * @param {User} req
+     * 
+     * @throws {Error} User not found 
+     */
     update(req) {
         const idx = lodash.findIndex(this.collection, { id: req.id })
         if (idx < 0) {
@@ -61,6 +82,7 @@ export default class UserPeristenceFileRepository {
         this.save()
     }
 
+    /**@private */
     save() {
         const folder = path.dirname(this.filePath)
         if (!fs.existsSync(folder)) {
@@ -70,6 +92,11 @@ export default class UserPeristenceFileRepository {
         fs.writeFileSync(this.filePath, JSON.stringify(this.collection))
     }
 
+    /**
+     * @param {string} id 
+     * 
+     * @returns {User}
+     */
     getUserById(id) {
         const idx = lodash.findIndex(this.collection, { id: id })
 

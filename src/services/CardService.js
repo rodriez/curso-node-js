@@ -3,30 +3,44 @@ import * as uuid from 'uuid'
 export const STATUS_PENDING = "Pending"
 export const STATUS_DONE = "Done"
 export const STATUS_IN_PROGRESS = "In Progress"
+
 const validStatuses = [STATUS_PENDING, STATUS_IN_PROGRESS, STATUS_DONE]
 
 /** 
- * @typedef {object} CardPersistence
+ * @typedef {import('./UserService').User} User
  * 
-* @typedef {object} card
-* @param {string=} title
-* @param {string=} description
-* @param {string=} userEmail
-* @param {string=} status
+ * @typedef {object} UserPersistence
+ * @property {function(string):User} getUserById - Search and return the user that match with the given id
+ * 
+ * @typedef {object} Card
+ * @property {string=} id
+ * @property {string=} userId
+ * @property {string=} title
+ * @property {string=} description
+ * @property {string=} status
+ * @property {User=} user
+ * @property {Date=} createAt
+ * @property {Date=} updateAt
+ * 
+ * @typedef {object} CardPersistence
+ * @property {function(Card):void} addCard - Create an new card
+ * @property {function(string):Card} getCardById - Search & return the card of the given id
+ * @property {function():Card[]} all - Return all registered cards
+ * @property {function(Card):boolean} exists - Return a value if that indicate if the Card is already registered
+ * @property {function(string, string):void} updateStatus - Update an existing Card
+ *
 */
 export default class CardService {
-
+    
     /**
-    * 
     * @param {CardPersistence} cardPersistence 
-    * @param {*} userService 
+    * @param {UserPersistence} userService 
     */
-
     constructor(cardPersistence, userService) {
-
         /**@private */
         this.cardPersistence = cardPersistence
 
+        /**@private */
         this.userService = userService
     }
 
@@ -38,10 +52,13 @@ export default class CardService {
      * @param {string=} req.description
      * @param {string=} req.userId
      * @param {string=} req.status
+     * 
      * @throws {Error} Invalid title
      * @throws {Error} Invalid description
      * @throws {Error} Invalid userId
      * @throws {Error} Invalid status
+     * 
+     * @returns {Card}
      */
     addCard(req) {
 
@@ -58,6 +75,7 @@ export default class CardService {
         }
 
         this.cardPersistence.addCard(card)
+
         return card
     }
 
@@ -77,29 +95,54 @@ export default class CardService {
         }
     }
 
+    /**
+     * Search and return the card 
+     * 
+     * @param {string} id 
+     * 
+     * @returns {Card}
+     */
     getCardById(id) {
         const card = this.cardPersistence.getCardById(id)
-        const user = this.userService.getUserById(card.userId)
+        const user = this.userService.getUserById(`${card.userId}`)
 
-        delete (card.userId)
-        delete (user.pass)
-        delete (user.createAt)
-        delete (user.updateAt)
+        //NOTE: La funcion delete tiene un Syntatic Sugar para evitar escribir los parentesis 
+        delete card.userId
+        delete user.pass
+        delete user.createAt
+        delete user.updateAt
 
         card.user = user
 
         return card
     }
 
+    /**
+     * Return all registered cards
+     * Creation and last update date are not included in the result
+     * 
+     * @returns {Card[]}
+     */
     getCards() {
-        const allCards = this.cardPersistence.getCards()
+        const allCards = this.cardPersistence.all()
+
         for (const i of allCards) {
-            delete (i.createAt)
-            delete (i.updateAt)
+            delete i.createAt
+            delete i.updateAt
         }
+
         return allCards
     }
 
+    /**
+     * Update the card status
+     * If there is no card with that id, throws an error
+     * 
+     * @param {string} id 
+     * @param {string} status
+     * 
+     * @throws {Error} Card not found
+     */
     updateStatus(id, status) {
         this.checkUpdateStatusRequest(id, status)
 

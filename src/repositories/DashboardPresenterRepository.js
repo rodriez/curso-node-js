@@ -1,5 +1,14 @@
+/**
+ * @typedef {import('../services/DashboardService').Dashboard} Dashboard
+ * @typedef {import('../services/DashboardService').DashboardPresenter} DashboardPresenter
+ * 
+ * @implements {DashboardPresenter} 
+ */
 export default class DashboardPresenterRepository {
     
+    /**
+     * @param {Dashboard} dashboard 
+     */
     present(dashboard) {
         const rowAmount = Math.max(dashboard.pending.length, dashboard.inProgress.length, dashboard.done.length)
         const table = (rowAmount > 0) ? this.toTable(dashboard, rowAmount): this.emptyTable()
@@ -8,6 +17,7 @@ export default class DashboardPresenterRepository {
         console.table(table)
     }
 
+    /**@private */
     toTable(dashboard, rowAmount) {
         return Array(rowAmount).fill(0).map((_, i) => {
             return {
@@ -18,6 +28,7 @@ export default class DashboardPresenterRepository {
         })
     }
 
+    /**@private */
     presentCard(card) {
         if (card != undefined) {
             return `${card.id} - ${card.title}`
@@ -26,6 +37,7 @@ export default class DashboardPresenterRepository {
         return ''
     }
 
+    /**@private */
     emptyTable() {
         return [
             {

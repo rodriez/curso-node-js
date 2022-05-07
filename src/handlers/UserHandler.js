@@ -4,11 +4,14 @@ import UserPersistenceFileRepository from "../repositories/UserPersistenceFileRe
 
 dotenv.config()
 
-const userPersitenceRepo = new UserPersistenceFileRepository(process.env.DB_USER)
+const userPersitenceRepo = new UserPersistenceFileRepository(`${process.env.DB_USER}`)
 const userService = new UserService(userPersitenceRepo);
 
 export default class UserHandler {
     
+    /**
+     * @param {*} request 
+     */
     static addUser(request){
         try {
             userService.addUser(request)
@@ -20,6 +23,7 @@ export default class UserHandler {
     static showUsers(){
         try {
             const users = userService.getUsers()
+
             console.clear()
             console.table(users)
         } catch (e) {
@@ -27,13 +31,16 @@ export default class UserHandler {
         }
     }
 
+    /**
+     * @param {*} req 
+     */
     static changeUser(req){
         try {
             userService.updateUser(req)
+            
             UserHandler.showUsers()
         } catch (error) {
             console.log(error.message)
         }
     }
-    
 }

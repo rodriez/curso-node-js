@@ -8,66 +8,77 @@ import UserPeristenceFileRepository from '../repositories/UserPersistenceFileRep
 
 dotenv.config()
 
-const userPersistenceRepo = new UserPeristenceFileRepository(process.env.DB_USER)
+const userPersistenceRepo = new UserPeristenceFileRepository(`process.env.DB_USER`)
 const userService = new UserService(userPersistenceRepo)
 const dashboardPresenterRepo = new DashboardPresenterRepository()
-const cardPersitenceRepo = new CardPersistenceFileRepository(process.env.DB_CARD)
+const cardPersitenceRepo = new CardPersistenceFileRepository(`process.env.DB_CARD`)
 const cardService = new CardService(cardPersitenceRepo, userService);
-const dashboardService = new DashboardService(cardPersitenceRepo, dashboardPresenterRepo)
+const dashboardService = new DashboardService(cardPersitenceRepo, dashboardPresenterRepo, userPersistenceRepo)
 
 export default class CardHandler {
+    /**
+     * @param {*} req 
+     */
     static addCard(req) {
         try {
             const newCard = cardService.addCard(req)
+            
             CardHandler.showCard(newCard)
-
         } catch (e) {
             console.log(e.message)
         }
     }
 
-
+    /**
+     * @param {*} req 
+     */
     static showCard(req) {
         try {
             const card = cardService.getCardById(req.id)
-            
+
             console.clear()
             console.log(card)
-
         } catch (e) {
-
             console.log(e.message)
         }
     }
 
+    /**
+     * @param {*} req 
+     */
     static moveToInProgress(req) {
         try {
             cardService.updateStatus(req.id, STATUS_IN_PROGRESS)
 
             dashboardService.showDashboard()
-        } catch(e) {
+        } catch (e) {
             console.log(e.message)
         }
     }
 
+    /**
+     * @param {*} req 
+     */
     static moveToPending(req) {
         try {
             cardService.updateStatus(req.id, STATUS_PENDING)
 
             dashboardService.showDashboard()
-        } catch(e) {
+        } catch (e) {
             console.log(e.message)
         }
     }
 
+    /**
+     * @param {*} req 
+     */
     static moveToDone(req) {
         try {
             cardService.updateStatus(req.id, STATUS_DONE)
 
             dashboardService.showDashboard()
-        } catch(e) {
+        } catch (e) {
             console.log(e.message)
         }
     }
-
 }
