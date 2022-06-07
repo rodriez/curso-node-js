@@ -58,9 +58,9 @@ export default class CardService {
      * @throws {Error} Invalid userId
      * @throws {Error} Invalid status
      * 
-     * @returns {Card}
+     * @returns {Promise<Card>}
      */
-    addCard(req) {
+    async addCard(req) {
 
         this.checkAddCardRequest(req)
 
@@ -100,9 +100,9 @@ export default class CardService {
      * 
      * @param {string} id 
      * 
-     * @returns {Card}
+     * @returns {Promise<Card>}
      */
-    getCardById(id) {
+    async getCardById(id) {
         const card = this.cardPersistence.getCardById(id)
         const user = this.userService.getUserById(`${card.userId}`)
 
@@ -143,7 +143,7 @@ export default class CardService {
      * 
      * @throws {Error} Card not found
      */
-    updateStatus(id, status) {
+    async updateStatus(id, status) {
         this.checkUpdateStatusRequest(id, status)
 
         if (!this.cardPersistence.exists({ id: id })) {

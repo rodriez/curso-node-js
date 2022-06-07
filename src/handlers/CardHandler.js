@@ -8,10 +8,10 @@ import UserPeristenceFileRepository from '../repositories/UserPersistenceFileRep
 
 dotenv.config()
 
-const userPersistenceRepo = new UserPeristenceFileRepository(`process.env.DB_USER`)
+const userPersistenceRepo = new UserPeristenceFileRepository(`${process.env.DB_USER}`)
 const userService = new UserService(userPersistenceRepo)
 const dashboardPresenterRepo = new DashboardPresenterRepository()
-const cardPersitenceRepo = new CardPersistenceFileRepository(`process.env.DB_CARD`)
+const cardPersitenceRepo = new CardPersistenceFileRepository(`${process.env.DB_CARD}`)
 const cardService = new CardService(cardPersitenceRepo, userService);
 const dashboardService = new DashboardService(cardPersitenceRepo, dashboardPresenterRepo, userPersistenceRepo)
 
@@ -20,13 +20,9 @@ export default class CardHandler {
      * @param {*} req 
      */
     static addCard(req) {
-        try {
-            const newCard = cardService.addCard(req)
-            
-            CardHandler.showCard(newCard)
-        } catch (e) {
-            console.log(e.message)
-        }
+        cardService.addCard(req)
+            .then(CardHandler.showCard)
+            .catch((e) => console.log(e.message))
     }
 
     /**
@@ -46,9 +42,9 @@ export default class CardHandler {
     /**
      * @param {*} req 
      */
-    static moveToInProgress(req) {
+    static async moveToInProgress(req) {
         try {
-            cardService.updateStatus(req.id, STATUS_IN_PROGRESS)
+            await cardService.updateStatus(req.id, STATUS_IN_PROGRESS)
 
             dashboardService.showDashboard()
         } catch (e) {
@@ -59,9 +55,9 @@ export default class CardHandler {
     /**
      * @param {*} req 
      */
-    static moveToPending(req) {
+    static async moveToPending(req) {
         try {
-            cardService.updateStatus(req.id, STATUS_PENDING)
+            await cardService.updateStatus(req.id, STATUS_PENDING)
 
             dashboardService.showDashboard()
         } catch (e) {
@@ -72,9 +68,9 @@ export default class CardHandler {
     /**
      * @param {*} req 
      */
-    static moveToDone(req) {
+    static async moveToDone(req) {
         try {
-            cardService.updateStatus(req.id, STATUS_DONE)
+            await cardService.updateStatus(req.id, STATUS_DONE)
 
             dashboardService.showDashboard()
         } catch (e) {
