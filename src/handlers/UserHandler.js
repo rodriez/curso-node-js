@@ -12,17 +12,17 @@ export default class UserHandler {
     /**
      * @param {*} request 
      */
-    static addUser(request){
+    static async addUser(request){
         try {
-            userService.addUser(request)
+            await userService.addUser(request)
         } catch (e) {
             console.log(e.message)
         }
     }
 
-    static showUsers(){
+    static async showUsers(){
         try {
-            const users = userService.getUsers()
+            const users = await userService.getUsers()
 
             console.clear()
             console.table(users)
@@ -34,9 +34,9 @@ export default class UserHandler {
     /**
      * @param {*} req 
      */
-    static changeUser(req){
+    static async changeUser(req){
         try {
-            userService.updateUser(req)
+            await userService.updateUser(req)
             
             UserHandler.showUsers()
         } catch (error) {

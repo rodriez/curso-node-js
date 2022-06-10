@@ -1,6 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import lodash from 'lodash'
+import { EventEmitter } from 'stream'
 
 /**
  * @typedef {import('../services/CardService').Card} Card
@@ -11,22 +12,27 @@ export default class CardPeristenceFileRepository {
 
     /**
      * @param {string} filePath 
+     * @param {EventEmitter} eventEmitter 
      */
-    constructor(filePath) {
+    constructor(filePath, eventEmitter) {
         /**@private */
         this.filePath = filePath
 
         /** @private */
         this.collection = this.loadCard()
+        /** @private */
+        this.eventEmitter = eventEmitter
     }
 
     /**
      * @param {Card} card 
      */
-    addCard(card) {
+    async addCard(card) {
         this.collection.push(card)
 
         this.save()
+
+        this.eventEmitter.emit("card-created", card)
     }
 
     /**@private */
@@ -59,9 +65,9 @@ export default class CardPeristenceFileRepository {
      * 
      * @throws {Error} Not found
      * 
-     * @returns {Card}
+     * @returns {Promise<Card>}
      */
-    getCardById(id) {
+     async getCardById(id) {
 
         const idCard = lodash.findIndex(this.collection, {
             id
@@ -75,18 +81,18 @@ export default class CardPeristenceFileRepository {
     }
 
     /**
-     * @returns {Card[]}
+     * @returns {Promise<Card[]>}
      */
-    all() {
+    async all() {
         return this.collection
     }
 
     /**
      * @param {Card} criteria 
      * 
-     * @returns {boolean}
+     * @returns {Promise<boolean>}
      */
-    exists(criteria) {
+    async exists(criteria) {
         const idx = lodash.findIndex(this.collection, criteria)
 
         return (idx >= 0)
@@ -96,21 +102,22 @@ export default class CardPeristenceFileRepository {
      * @param {string} id 
      * @param {string} status 
      */
-    updateStatus(id, status) {
+    async updateStatus(id, status) {
         const idx = lodash.findIndex(this.collection, { id: id })
 
         this.collection[idx].status = status
         this.collection[idx].updateAt = new Date()
 
         this.save()
+        this.eventEmitter.emit("card-updated", this.collection[idx])
     }
 
     /**
      * @param {Card} criteria 
      * 
-     * @returns {Card[]}
+     * @returns {Promise<Card[]>}
      */
-    search(criteria) {
+    async search(criteria) {
         return lodash.filter(this.collection, criteria)
     }
 }

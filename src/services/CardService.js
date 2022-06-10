@@ -23,11 +23,11 @@ const validStatuses = [STATUS_PENDING, STATUS_IN_PROGRESS, STATUS_DONE]
  * @property {Date=} updateAt
  * 
  * @typedef {object} CardPersistence
- * @property {function(Card):void} addCard - Create an new card
- * @property {function(string):Card} getCardById - Search & return the card of the given id
- * @property {function():Card[]} all - Return all registered cards
- * @property {function(Card):boolean} exists - Return a value if that indicate if the Card is already registered
- * @property {function(string, string):void} updateStatus - Update an existing Card
+ * @property {function(Card):Promise} addCard - Create an new card
+ * @property {function(string):Promise<Card>} getCardById - Search & return the card of the given id
+ * @property {function():Promise<Card[]>} all - Return all registered cards
+ * @property {function(Card):Promise<boolean>} exists - Return a value if that indicate if the Card is already registered
+ * @property {function(string, string):Promise} updateStatus - Update an existing Card
  *
 */
 export default class CardService {
@@ -74,7 +74,7 @@ export default class CardService {
             updateAt: new Date()
         }
 
-        this.cardPersistence.addCard(card)
+        await this.cardPersistence.addCard(card)
 
         return card
     }
@@ -103,8 +103,8 @@ export default class CardService {
      * @returns {Promise<Card>}
      */
     async getCardById(id) {
-        const card = this.cardPersistence.getCardById(id)
-        const user = this.userService.getUserById(`${card.userId}`)
+        const card = await this.cardPersistence.getCardById(id)
+        const user = await this.userService.getUserById(`${card.userId}`)
 
         //NOTE: La funcion delete tiene un Syntatic Sugar para evitar escribir los parentesis 
         delete card.userId
@@ -121,10 +121,10 @@ export default class CardService {
      * Return all registered cards
      * Creation and last update date are not included in the result
      * 
-     * @returns {Card[]}
+     * @returns {Promise<Card[]>}
      */
-    getCards() {
-        const allCards = this.cardPersistence.all()
+    async getCards() {
+        const allCards = await this.cardPersistence.all()
 
         for (const i of allCards) {
             delete i.createAt
@@ -146,7 +146,7 @@ export default class CardService {
     async updateStatus(id, status) {
         this.checkUpdateStatusRequest(id, status)
 
-        if (!this.cardPersistence.exists({ id: id })) {
+        if (!(await this.cardPersistence.exists({ id: id }))) {
             throw Error("Card not found")
         }
 

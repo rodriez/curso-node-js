@@ -27,9 +27,9 @@ export default class UserPeristenceFileRepository {
     /**
      * @param {User} criteria 
      * 
-     * @returns {boolean}
+     * @returns {Promise<boolean>}
      */
-    exists(criteria) {
+    async exists(criteria) {
         const index = lodash.findIndex(this.collection, criteria)
 
         return (index >= 0)
@@ -38,16 +38,16 @@ export default class UserPeristenceFileRepository {
     /**
      * @param {User} user 
      */
-    add(user) {
+    async add(user) {
         this.collection.push(user)
 
         this.save()
     }
 
     /**
-     * @returns {User[]}
+     * @returns {Promise<User[]>}
      */
-    getUsers() {
+    async getUsers() {
         return this.collection
     }
 
@@ -70,7 +70,7 @@ export default class UserPeristenceFileRepository {
      * 
      * @throws {Error} User not found 
      */
-    update(req) {
+    async update(req) {
         const idx = lodash.findIndex(this.collection, { id: req.id })
         if (idx < 0) {
             throw Error('User not found')

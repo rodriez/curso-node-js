@@ -4,13 +4,13 @@ import { STATUS_PENDING, STATUS_IN_PROGRESS, STATUS_DONE } from "../services/Car
  * @typedef {import('./CardService').Card} Card
  * 
  * @typedef {object} DashboardCardPersistence
- * @property {function(Card):Card[]} search - This function return all the cards that match with the given criteria 
- * @property {function():Card[]} all - This function return all registered cards
+ * @property {function(Card):Promise<Card[]>} search - This function return all the cards that match with the given criteria 
+ * @property {function():Promise<Card[]>} all - This function return all registered cards
  * 
  * @typedef {import('./UserService').User} User
  * 
  * @typedef {object} DashboardUserPersistence
- * @property {function(User):boolean} exists - This function return all the cards that match with the given criteria
+ * @property {function(User):Promise<boolean>} exists - This function return all the cards that match with the given criteria
  * 
  * @typedef {object} Dashboard
  * @property {Card[]} pending
@@ -43,14 +43,14 @@ export default class DashboardService {
      * 
      * @throws {Error} Invalid userId
      */
-    showDashboard(req) {
+    async showDashboard(req) {
         let cards = []
-        if (req?.userId && !this.userPersistence.exists({id: req.userId})) {
+        if (req?.userId && !(await this.userPersistence.exists({id: req.userId}))) {
             throw Error("Invalid userId")
         } else if (req?.userId) {
-            cards = this.cardPersistence.search({ userId: req.userId })
+            cards = await this.cardPersistence.search({ userId: req.userId })
         } else {
-            cards = this.cardPersistence.all()
+            cards = await this.cardPersistence.all()
         }
 
         const dashboard = {

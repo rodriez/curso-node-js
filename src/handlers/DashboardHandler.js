@@ -13,9 +13,9 @@ export default class DashboardHandler {
     /**
      * @param {*} req 
      */
-    static showDashboard(req) {
+    static async showDashboard(req) {
         try {
-            service.showDashboard(req)
+            await service.showDashboard(req)
         } catch (e) {
             console.log(e.message)
         }
