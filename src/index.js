@@ -1,3 +1,4 @@
+import "./db.js"
 import UserHandler from './handlers/UserHandler.js'
 import CardHandler from './handlers/CardHandler.js'
 import { hideBin } from 'yargs/helpers'

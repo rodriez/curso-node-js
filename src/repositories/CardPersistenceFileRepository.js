@@ -1,7 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import lodash from 'lodash'
-import { EventEmitter } from 'stream'
 
 /**
  * @typedef {import('../services/CardService').Card} Card
@@ -12,7 +11,7 @@ export default class CardPeristenceFileRepository {
 
     /**
      * @param {string} filePath 
-     * @param {EventEmitter} eventEmitter 
+     * @param {import('events').EventEmitter=} eventEmitter 
      */
     constructor(filePath, eventEmitter) {
         /**@private */
@@ -32,6 +31,7 @@ export default class CardPeristenceFileRepository {
 
         this.save()
 
+        // @ts-ignore
         this.eventEmitter.emit("card-created", card)
     }
 
@@ -109,6 +109,7 @@ export default class CardPeristenceFileRepository {
         this.collection[idx].updateAt = new Date()
 
         this.save()
+        // @ts-ignore
         this.eventEmitter.emit("card-updated", this.collection[idx])
     }
 

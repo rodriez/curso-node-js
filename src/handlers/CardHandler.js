@@ -6,6 +6,7 @@ import DashboardPresenterRepository from '../repositories/DashboardPresenterRepo
 import UserService from '../services/UserService.js';
 import UserPeristenceFileRepository from '../repositories/UserPersistenceFileRepository.js';
 import NotificationRepository from '../repositories/NotificationRepository.js';
+import CardPersistenceSqlRepository from '../repositories/CardPersistenceSqlRepository.js';
 
 dotenv.config()
 
@@ -13,7 +14,8 @@ const notificationRepository = new NotificationRepository()
 const userPersistenceRepo = new UserPeristenceFileRepository(`${process.env.DB_USER}`)
 const userService = new UserService(userPersistenceRepo)
 const dashboardPresenterRepo = new DashboardPresenterRepository()
-const cardPersitenceRepo = new CardPersistenceFileRepository(`${process.env.DB_CARD}`, notificationRepository)
+//const cardPersitenceRepo = new CardPersistenceFileRepository(`${process.env.DB_CARD}`, notificationRepository)
+const cardPersitenceRepo = new CardPersistenceSqlRepository(notificationRepository)
 const cardService = new CardService(cardPersitenceRepo, userService);
 const dashboardService = new DashboardService(cardPersitenceRepo, dashboardPresenterRepo, userPersistenceRepo)
 
