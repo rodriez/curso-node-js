@@ -6,7 +6,7 @@ const sequelize = new Sequelize("test", "root", "rodriEz.26", {
     host: "localhost",
     port: 3306,
     dialect: "mysql",
-    logging: false
+    logging: false 
 })
 
 CardModel.init(sequelize)

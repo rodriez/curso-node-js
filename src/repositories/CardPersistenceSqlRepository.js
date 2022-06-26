@@ -52,7 +52,9 @@ export default class CardPersistenceSqlRepository {
     async all() {
         const resultSet = await CardModel.findAll()
 
-        return resultSet.map(r => r.toCard())
+        return resultSet.map((r) => {
+            return r.toCard()
+        })
     }
 
     /**
@@ -79,8 +81,10 @@ export default class CardPersistenceSqlRepository {
             }
         })
 
+        const card = await CardModel.findByPk(id)
+
         // @ts-ignore
-        this.eventEmitter.emit("card-updated", {id: id, status: status})
+        this.eventEmitter.emit("card-updated", card?.toCard())
     }
 
     /**

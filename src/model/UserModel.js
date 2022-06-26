@@ -1,5 +1,7 @@
 import {DataTypes, Model} from 'sequelize'
-
+/**
+ * @typedef {import('../services/UserService').User} User
+ */
 export default class UserModel extends Model {
 
     /**
@@ -28,4 +30,17 @@ export default class UserModel extends Model {
         super.init(tableSpec, options)
     }
 
+    /**
+     * @returns {User}
+     */
+    toUser() {
+        return {
+            id: this.getDataValue("id"),
+            name: this.getDataValue("name"),
+            email: this.getDataValue("email"),
+            pass: this.getDataValue("pass"),
+            createAt: this.getDataValue("createdAt"),
+            updateAt: this.getDataValue("updatedAt"),
+        }
+    }
 }

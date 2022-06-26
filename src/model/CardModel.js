@@ -38,15 +38,30 @@ export default class CardModel extends Model {
      * @returns {*}
      */
     static fromCard(card) {
-        return {
-            id: card?.id,
-            user_id: card?.userId,
-            title: card?.title,
-            description: card?.description,
-            status: card?.status,
-            createdAt: card?.createAt,
-            updatedAt: card?.updateAt
-        }
+        const result = {}
+
+        if (card?.id)
+            result.id = card?.id
+
+        if (card?.userId)
+            result.user_id = card?.userId
+        
+        if (card?.title)
+            result.title = card?.title
+        
+        if (card?.description)
+            result.description = card?.description
+        
+        if (card?.status)
+            result.status = card?.status
+        
+        if (card?.createAt)
+            result.createdAt = card?.createAt
+        
+        if (card?.updateAt)
+            result.updatedAt = card?.updateAt
+
+        return result
     }
 
     /**

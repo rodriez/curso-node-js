@@ -8,9 +8,7 @@ const validStatuses = [STATUS_PENDING, STATUS_IN_PROGRESS, STATUS_DONE]
 
 /** 
  * @typedef {import('./UserService').User} User
- * 
- * @typedef {object} UserPersistence
- * @property {function(string):User} getUserById - Search and return the user that match with the given id
+ * @typedef {import('./UserService').UserPersistence} UserPersistence
  * 
  * @typedef {object} Card
  * @property {string=} id
@@ -108,9 +106,9 @@ export default class CardService {
 
         //NOTE: La funcion delete tiene un Syntatic Sugar para evitar escribir los parentesis 
         delete card.userId
-        delete user.pass
-        delete user.createAt
-        delete user.updateAt
+        delete user?.pass
+        delete user?.createAt
+        delete user?.updateAt
 
         card.user = user
 
@@ -150,7 +148,7 @@ export default class CardService {
             throw Error("Card not found")
         }
 
-        this.cardPersistence.updateStatus(id, status)
+        await this.cardPersistence.updateStatus(id, status)
     }
 
     /**@private */

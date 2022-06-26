@@ -1,7 +1,6 @@
 /**
  * @typedef {import('../services/DashboardService').Dashboard} Dashboard
  * @typedef {import('../services/DashboardService').DashboardPresenter} DashboardPresenter
- * 
  * @implements {DashboardPresenter} 
  */
 export default class DashboardPresenterRepository {
