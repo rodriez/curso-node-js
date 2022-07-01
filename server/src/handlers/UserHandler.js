@@ -1,6 +1,5 @@
 import UserService from "../services/UserService.js";
 import UserPersistenceSqlRepository from '../repositories/UserPersistenceSqlRepository.js';
-import crypto from "crypto"
 
 const userPersitenceRepo = new UserPersistenceSqlRepository();
 const userService = new UserService(userPersitenceRepo);
@@ -16,7 +15,7 @@ export default class UserHandler {
         const addUserReq = {
             name: req.body.name,
             email: req.body.email,
-            pass: crypto.createHash('md5').update(`mi-secreto-${req.body.pass}`).digest('hex') 
+            pass: req.body.pass 
         }
 
         userService.addUser(addUserReq)
@@ -38,4 +37,45 @@ export default class UserHandler {
             .catch(next)
     }
 
+    static updateUser(req, res, next) {
+        const updateUserRequest = {
+            id: req.params.id,
+            name: req.body.name,
+            email: req.body.email,
+            pass: req.body.pass
+        }
+
+        userService.updateUser(updateUserRequest)
+            .then((user) => {
+                delete user?.pass
+
+                res.status(200).json(user)
+            })
+            .catch(next)
+    }
+
+    static showUser(req, res, next) {
+        userService.getUsers()
+            .then((users) => {
+                const presentableUsers = users.map(u => {
+                    delete u.pass
+                    return u
+                })
+
+                res.status(200).json(presentableUsers)
+            })
+            .catch(next)
+    }
+
+    static deleteUser(req, res, next) {
+        const deleteUserRequest = {
+            id: req.params.id
+        }
+
+        userService.deleteUser(deleteUserRequest)
+            .then(user => {
+               res.status(200).json(user) 
+            })
+            .catch(next)
+    }
 }

@@ -1,4 +1,8 @@
 import * as uuid from 'uuid'
+import crypto from 'crypto'
+
+const SECRET = "mi-secreto"
+
 /**
  * @typedef {object} UserSearchCriteria
  * @property {string=} id
@@ -16,6 +20,7 @@ import * as uuid from 'uuid'
  * @property {function(UserSearchCriteria):Promise<boolean>} exists - This function validate if the user is already registered
  * @property {function(User):Promise} add - This function write a new user in the database
  * @property {function(User):Promise} update - This function update an existing user
+ * @property {function(string):Promise} deleteUser - This function delete an existing user
  * @property {function():Promise<User[]>} getUsers - This function return all registered users
  * @property {function(string):Promise<User|undefined>} getUserById - This function search and return that match with the given id
  */
@@ -45,11 +50,13 @@ export default class UserService {
     async addUser(req) {
         this.checkAddUserRequest(req)
 
+        const hashPass = crypto.createHash('md5').update(`${SECRET}-${req.pass}`).digest('hex')
+
         const user = {
             id: uuid.v4(),
             name: req.name,
             email: req.email,
-            pass: req.pass,
+            pass: hashPass,
             createAt: new Date(),
             updateAt: new Date()
         }
@@ -71,19 +78,21 @@ export default class UserService {
      * @param {string} req.id
      * @param {string=} req.name
      * @param {string=} req.email
-     * @param {string=} req.pass 
+     * @param {string=} req.pass
      * 
      * @throws {Error} Invalid user Id
      * @throws {Error} Invalid user name
      * @throws {Error} Invalid user email
      * @throws {Error} Invalid user pass
      * @throws {Error} the email is already in use
+     * 
+     * @returns {Promise<User|undefined>} 
      */
     async updateUser(req) {
         this.checkUpdateUserRequest(req)
         
         //req ? req.email : ''
-        if (await this.userPersistence.exists({ email: req?.email })) {
+        if (req?.email && await this.userPersistence.exists({ email: req.email })) {
             throw Error("the email is already in use")
         }
 
@@ -94,7 +103,9 @@ export default class UserService {
             pass: req.pass
         }
 
-        this.userPersistence.update(validatedRequest)
+        await this.userPersistence.update(validatedRequest)
+
+        return await this.userPersistence.getUserById(req.id)
     }
 
     /**@private */
@@ -138,15 +149,7 @@ export default class UserService {
      * @returns {Promise<User[]>}
      */
     async getUsers(){
-        const allUsers = await this.userPersistence.getUsers()
-
-        for (const i of allUsers) {
-            delete(i.pass)
-            delete(i.createAt)
-            delete(i.updateAt)
-        }
-
-        return allUsers
+        return await this.userPersistence.getUsers()
     }
 
     /**
@@ -161,4 +164,26 @@ export default class UserService {
         return await this.userPersistence.getUserById(id)
     }
 
+    async deleteUser(req) {
+        if(!req?.id) {
+            throw Error("Invalid user id")
+        }
+
+        const user = await this.getUserById(req.id)
+
+        if (!user) {
+            throw Error("User not found")
+        }
+
+        await this.userPersistence.deleteUser(req.id)
+
+        return user
+    }
+
+    async login(req) {
+        const hashPass = crypto.createHash('md5').update(`${SECRET}-${req.pass}`).digest('hex')
+
+        // @ts-ignore
+        return await this.userPersistence.getUserByEmailAndPass(req.email, hashPass)
+    }
 }

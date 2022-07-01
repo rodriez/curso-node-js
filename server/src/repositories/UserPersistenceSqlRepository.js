@@ -66,4 +66,16 @@ export default class UserPersistenceSqlRepository {
         return row?.toUser()
     }
 
+    /**
+     * 
+     * @param {string} id
+     * @return {Promise} 
+     */
+    async deleteUser(id) {
+        await UserModel.destroy({
+            where: {
+                id: id
+            }
+        })
+    }
 }

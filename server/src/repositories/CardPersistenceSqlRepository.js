@@ -8,14 +8,6 @@ import CardModel from '../model/CardModel.js';
 export default class CardPersistenceSqlRepository {
 
     /**
-     * @param {import('events').EventEmitter=} eventEmitter
-     */
-    constructor(eventEmitter) {
-        /** @private */
-        this.eventEmitter = eventEmitter
-    }
-
-    /**
      * 
      * @param {Card} card 
      */
@@ -23,9 +15,6 @@ export default class CardPersistenceSqlRepository {
         const row = CardModel.fromCard(card)
         
         await CardModel.create(row)
-
-        // @ts-ignore
-        this.eventEmitter.emit("card-created", card)
     }
 
     /**
@@ -82,9 +71,6 @@ export default class CardPersistenceSqlRepository {
         })
 
         const card = await CardModel.findByPk(id)
-
-        // @ts-ignore
-        this.eventEmitter.emit("card-updated", card?.toCard())
     }
 
     /**
