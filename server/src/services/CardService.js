@@ -26,6 +26,7 @@ const validStatuses = [STATUS_PENDING, STATUS_IN_PROGRESS, STATUS_DONE]
  * @property {function():Promise<Card[]>} all - Return all registered cards
  * @property {function(Card):Promise<boolean>} exists - Return a value if that indicate if the Card is already registered
  * @property {function(string, string):Promise} updateStatus - Update an existing Card
+ * @property {function(string):Promise} delete - Delete an existing Card
  *
 */
 export default class CardService {
@@ -124,11 +125,6 @@ export default class CardService {
     async getCards() {
         const allCards = await this.cardPersistence.all()
 
-        for (const i of allCards) {
-            delete i.createAt
-            delete i.updateAt
-        }
-
         return allCards
     }
 
@@ -140,6 +136,8 @@ export default class CardService {
      * @param {string} status
      * 
      * @throws {Error} Card not found
+     * 
+     * @returns {Promise<Card>}
      */
     async updateStatus(id, status) {
         this.checkUpdateStatusRequest(id, status)
@@ -149,6 +147,8 @@ export default class CardService {
         }
 
         await this.cardPersistence.updateStatus(id, status)
+
+        return await this.getCardById(id)
     }
 
     /**@private */
@@ -160,6 +160,22 @@ export default class CardService {
         if (status === "" || !validStatuses.includes(status)) {
             throw Error("Invalid state")
         }
+    }
+
+    async deleteCard(id) {
+        if (id === "") {
+            throw Error("Invalid card id")
+        }
+
+        const card = await this.getCardById(id)
+
+        if (!card) {
+            throw Error("Card not found")
+        }
+
+        await this.cardPersistence.delete(id)
+
+        return card
     }
 }
 

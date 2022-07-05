@@ -1,10 +1,13 @@
 import { Sequelize } from "sequelize";
 import CardModel from "./model/CardModel.js";
 import UserModel from "./model/UserModel.js";
+import dotenv from 'dotenv'
 
-const sequelize = new Sequelize("test", "root", "rodriEz.26", {
-    host: "localhost",
-    port: 3306,
+dotenv.config()
+
+const sequelize = new Sequelize(`${process.env.DB_NAME}`, `${process.env.DB_USER}`, `${process.env.DB_PASS}`, {
+    host: `${process.env.DB_HOST}`,
+    port: parseInt(`${process.env.DB_PORT}`, 10),
     dialect: "mysql",
     logging: true 
 })

@@ -85,4 +85,15 @@ export default class CardPersistenceSqlRepository {
 
         return resultSet.map(r => r.toCard())
     }
+
+    /**
+     * @param {string} id 
+     */
+    async delete(id) {
+        await CardModel.destroy({
+            where: {
+                id:id
+            }
+        })
+    }
 }

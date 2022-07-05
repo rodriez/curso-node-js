@@ -54,7 +54,7 @@ export default class UserHandler {
             .catch(next)
     }
 
-    static showUser(req, res, next) {
+    static showUsers(req, res, next) {
         userService.getUsers()
             .then((users) => {
                 const presentableUsers = users.map(u => {

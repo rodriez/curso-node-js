@@ -23,8 +23,32 @@ export default class CardHandler {
             .catch(next)
     }
 
-    static showCard(req, res, next) {
+    static getCard(req, res, next) {
         cardService.getCardById(req.params.id)
+            .then(card => {
+                res.status(200).json(card)
+            })
+            .catch(next)
+    }
+
+    static showCards(req, res, next) {
+        cardService.getCards()
+            .then(cards => {
+                res.status(200).json(cards)
+            })
+            .catch(next)
+    }
+
+    static updateStatusCard(req, res, next) {
+        cardService.updateStatus(req.params.id, req.body.status)
+            .then(card => {
+                res.status(200).json(card)
+            })
+            .catch(next)
+    }
+
+    static deleteCard(req, res, next) {
+        cardService.deleteCard(req.params.id)
             .then(card => {
                 res.status(200).json(card)
             })
