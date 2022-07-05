@@ -1,10 +1,8 @@
 import dotenv from 'dotenv'
 import UserService from "../services/UserService.js";
-import UserPersistenceSqlRepository from '../repositories/UserPersistenceSqlRepository.js';
 
 dotenv.config()
 
-//const userPersitenceRepo = new UserPersistenceFileRepository(`${process.env.DB_USER}`)
 const userPersitenceRepo = new UserPersistenceSqlRepository();
 const userService = new UserService(userPersitenceRepo);
 

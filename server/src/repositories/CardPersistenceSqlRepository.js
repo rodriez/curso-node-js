@@ -1,3 +1,4 @@
+import NotFound from '../errors/NotFound.js';
 import CardModel from '../model/CardModel.js';
 
 /**
@@ -31,7 +32,7 @@ export default class CardPersistenceSqlRepository {
             return row.toCard()
         }
 
-        throw Error("Not found")
+        throw new NotFound("Not found")
     }
 
 
@@ -70,7 +71,7 @@ export default class CardPersistenceSqlRepository {
             }
         })
 
-        const card = await CardModel.findByPk(id)
+        await CardModel.findByPk(id)
     }
 
     /**

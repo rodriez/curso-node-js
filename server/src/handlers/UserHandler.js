@@ -20,6 +20,7 @@ export default class UserHandler {
 
         userService.addUser(addUserReq)
         .then((user) => {
+            // @ts-ignore
             delete user.pass
 
             res.status(201).json(user)

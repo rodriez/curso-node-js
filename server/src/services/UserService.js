@@ -1,5 +1,7 @@
 import * as uuid from 'uuid'
 import crypto from 'crypto'
+import BadRequest from '../errors/BadRequest.js'
+import NotFound from '../errors/NotFound.js'
 
 const SECRET = "mi-secreto"
 
@@ -62,7 +64,7 @@ export default class UserService {
         }
 
         if (await this.userPersistence.exists({ email: user.email })) {
-            throw Error("The user is already registered")
+            throw new BadRequest("The user is already registered")
         }
 
         await this.userPersistence.add(user)
@@ -93,7 +95,7 @@ export default class UserService {
         
         //req ? req.email : ''
         if (req?.email && await this.userPersistence.exists({ email: req.email })) {
-            throw Error("the email is already in use")
+            throw new BadRequest("the email is already in use")
         }
 
         const validatedRequest = {
@@ -111,34 +113,34 @@ export default class UserService {
     /**@private */
     checkUpdateUserRequest(req){
         if (req?.id == undefined || req?.id.trim() == '') {
-            throw Error('Invalid user Id')
+            throw new BadRequest('Invalid user Id')
         }
         
         if (req.name != undefined && req.name == '') {
-            throw Error('Invalid user name')
+            throw new BadRequest('Invalid user name')
         }
         
         if (req.email != undefined && req.email == '') {
-            throw Error('Invalid user email')
+            throw new BadRequest('Invalid user email')
         }
 
         if (req.pass != undefined && req.pass == '') {
-            throw Error('Invalid user password')
+            throw new BadRequest('Invalid user password')
         }
     }
 
     /**@private */
     checkAddUserRequest(req) {
         if (req?.name === "") {
-            throw Error("Invalid user name")
+            throw new BadRequest("Invalid user name")
         }
 
         if (req?.email === "") {
-            throw Error("Invalid user email")
+            throw new BadRequest("Invalid user email")
         }
 
         if (req?.pass === "") {
-            throw Error("Invalid user password")
+            throw new BadRequest("Invalid user password")
         }
     }
 
@@ -166,13 +168,13 @@ export default class UserService {
 
     async deleteUser(req) {
         if(!req?.id) {
-            throw Error("Invalid user id")
+            throw new BadRequest("Invalid user id")
         }
 
         const user = await this.getUserById(req.id)
 
         if (!user) {
-            throw Error("User not found")
+            throw new NotFound("User not found")
         }
 
         await this.userPersistence.deleteUser(req.id)

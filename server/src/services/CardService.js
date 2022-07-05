@@ -1,4 +1,6 @@
 import * as uuid from 'uuid'
+import BadRequest from '../errors/BadRequest.js'
+import NotFound from '../errors/NotFound.js'
 
 export const STATUS_PENDING = "Pending"
 export const STATUS_DONE = "Done"
@@ -81,16 +83,16 @@ export default class CardService {
     /**@private */
     checkAddCardRequest(req) {
         if (req?.title === "") {
-            throw Error("Invalid title")
+            throw new BadRequest("Invalid title")
         }
 
         if (req?.description === "") {
-            throw Error("Invalid description")
+            throw new BadRequest("Invalid description")
         }
 
         if (req?.userId === "") {
 
-            throw Error("Invalid userId")
+            throw new BadRequest("Invalid userId")
         }
     }
 
@@ -143,7 +145,7 @@ export default class CardService {
         this.checkUpdateStatusRequest(id, status)
 
         if (!(await this.cardPersistence.exists({ id: id }))) {
-            throw Error("Card not found")
+            throw new NotFound("Card not found")
         }
 
         await this.cardPersistence.updateStatus(id, status)
@@ -154,23 +156,23 @@ export default class CardService {
     /**@private */
     checkUpdateStatusRequest(id, status) {
         if (id === "") {
-            throw Error("Invalid card id")
+            throw new BadRequest("Invalid card id")
         }
 
         if (status === "" || !validStatuses.includes(status)) {
-            throw Error("Invalid state")
+            throw new BadRequest("Invalid state")
         }
     }
 
     async deleteCard(id) {
         if (id === "") {
-            throw Error("Invalid card id")
+            throw new BadRequest("Invalid card id")
         }
 
         const card = await this.getCardById(id)
 
         if (!card) {
-            throw Error("Card not found")
+            throw new NotFound("Card not found")
         }
 
         await this.cardPersistence.delete(id)
