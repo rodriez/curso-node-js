@@ -17,7 +17,7 @@ import * as uuid from 'uuid'
  * @property {function(User):Promise} add - This function write a new user in the database
  * @property {function(User):Promise} update - This function update an existing user
  * @property {function():Promise<User[]>} getUsers - This function return all registered users
- * @property {function(string):Promise<User|undefined>} getUserById - This function search and return that match with the given id
+ * @property {function(string):Promise<User>} getUserById - This function search and return that match with the given id
  */
 export default class UserService {
     

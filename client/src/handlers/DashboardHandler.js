@@ -1,20 +1,20 @@
-import DashboardService from "../services/DashboardService.js"
-import DashboardPresenterRepository from "../repositories/DashboardPresenterRepository.js"
+// import DashboardService from "../services/DashboardService.js"
+// import DashboardPresenterRepository from "../repositories/DashboardPresenterRepository.js"
 
-const dashboardPresenter = new DashboardPresenterRepository()
-const service = new DashboardService(cardPersistence, dashboardPresenter, userPersistence)
+// const dashboardPresenter = new DashboardPresenterRepository()
+// const service = new DashboardService(cardPersistence, dashboardPresenter, userPersistence)
 
-export default class DashboardHandler {
+// export default class DashboardHandler {
 
-    /**
-     * @param {*} req 
-     */
-    static async showDashboard(req) {
-        try {
-            await service.showDashboard(req)
-        } catch (e) {
-            console.log(e.message)
-        }
-    }
+//     /**
+//      * @param {*} req 
+//      */
+//     static async showDashboard(req) {
+//         try {
+//             await service.showDashboard(req)
+//         } catch (e) {
+//             console.log(e.message)
+//         }
+//     }
 
-}
+// }
