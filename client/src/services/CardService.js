@@ -21,11 +21,10 @@ const validStatuses = [STATUS_PENDING, STATUS_IN_PROGRESS, STATUS_DONE]
  * @property {Date=} updateAt
  * 
  * @typedef {object} CardPersistence
- * @property {function(Card):Promise} addCard - Create an new card
+ * @property {function(Card):Promise<Card>} addCard - Create an new card
  * @property {function(string):Promise<Card>} getCardById - Search & return the card of the given id
  * @property {function():Promise<Card[]>} all - Return all registered cards
- * @property {function(Card):Promise<boolean>} exists - Return a value if that indicate if the Card is already registered
- * @property {function(string, string):Promise} updateStatus - Update an existing Card
+ * @property {function(string, string):Promise<Card>} updateStatus - Update an existing Card
  *
 */
 export default class CardService {
@@ -63,18 +62,12 @@ export default class CardService {
         this.checkAddCardRequest(req)
 
         const card = {
-            id: uuid.v4().split('-')[0],
             userId: req.userId,
             title: req.title,
-            description: req.description,
-            status: STATUS_PENDING,
-            createAt: new Date(),
-            updateAt: new Date()
+            description: req.description
         }
 
-        await this.cardPersistence.addCard(card)
-
-        return card
+        return await this.cardPersistence.addCard(card)
     }
 
     /**@private */
@@ -102,15 +95,6 @@ export default class CardService {
      */
     async getCardById(id) {
         const card = await this.cardPersistence.getCardById(id)
-        const user = await this.userService.getUserById(`${card.userId}`)
-
-        //NOTE: La funcion delete tiene un Syntatic Sugar para evitar escribir los parentesis 
-        delete card.userId
-        delete user?.pass
-        delete user?.createAt
-        delete user?.updateAt
-
-        card.user = user
 
         return card
     }
@@ -143,10 +127,6 @@ export default class CardService {
      */
     async updateStatus(id, status) {
         this.checkUpdateStatusRequest(id, status)
-
-        if (!(await this.cardPersistence.exists({ id: id }))) {
-            throw Error("Card not found")
-        }
 
         await this.cardPersistence.updateStatus(id, status)
     }

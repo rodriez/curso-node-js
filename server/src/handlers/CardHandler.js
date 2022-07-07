@@ -18,6 +18,10 @@ export default class CardHandler {
 
         cardService.addCard(addCardRequest)
             .then(card => {
+                // @ts-ignore
+                card.user_id = card.userId
+                delete card.userId
+                
                 res.status(201).json(card)
             })
             .catch(next)
@@ -32,9 +36,14 @@ export default class CardHandler {
     }
 
     static showCards(req, res, next) {
-        cardService.getCards()
+        cardService.getCards(req.query)
             .then(cards => {
-                res.status(200).json(cards)
+                res.status(200).json(cards.map(card => {
+                    // @ts-ignore
+                    card.user_id = card.userId
+                    delete card.userId
+                    return card
+                }))
             })
             .catch(next)
     }
@@ -42,6 +51,9 @@ export default class CardHandler {
     static updateStatusCard(req, res, next) {
         cardService.updateStatus(req.params.id, req.body.status)
             .then(card => {
+                // @ts-ignore
+                card.user_id = card.userId
+                delete card.userId
                 res.status(200).json(card)
             })
             .catch(next)
@@ -50,6 +62,9 @@ export default class CardHandler {
     static deleteCard(req, res, next) {
         cardService.deleteCard(req.params.id)
             .then(card => {
+                // @ts-ignore
+                card.user_id = card.userId
+                delete card.userId
                 res.status(200).json(card)
             })
             .catch(next)

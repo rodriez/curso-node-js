@@ -25,7 +25,7 @@ const validStatuses = [STATUS_PENDING, STATUS_IN_PROGRESS, STATUS_DONE]
  * @typedef {object} CardPersistence
  * @property {function(Card):Promise} addCard - Create an new card
  * @property {function(string):Promise<Card>} getCardById - Search & return the card of the given id
- * @property {function():Promise<Card[]>} all - Return all registered cards
+ * @property {function(Card):Promise<Card[]>} search - Return all registered cards
  * @property {function(Card):Promise<boolean>} exists - Return a value if that indicate if the Card is already registered
  * @property {function(string, string):Promise} updateStatus - Update an existing Card
  * @property {function(string):Promise} delete - Delete an existing Card
@@ -122,10 +122,12 @@ export default class CardService {
      * Return all registered cards
      * Creation and last update date are not included in the result
      * 
+     * @param {Card} criteria
+     * 
      * @returns {Promise<Card[]>}
      */
-    async getCards() {
-        const allCards = await this.cardPersistence.all()
+    async getCards(criteria) {
+        const allCards = await this.cardPersistence.search(criteria)
 
         return allCards
     }

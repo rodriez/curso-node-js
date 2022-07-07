@@ -1,4 +1,3 @@
-import * as uuid from 'uuid'
 /**
  * @typedef {object} UserSearchCriteria
  * @property {string=} id
@@ -13,9 +12,8 @@ import * as uuid from 'uuid'
  * @property {Date=} updateAt
  * 
  * @typedef {object} UserPersistence
- * @property {function(UserSearchCriteria):Promise<boolean>} exists - This function validate if the user is already registered
- * @property {function(User):Promise} add - This function write a new user in the database
- * @property {function(User):Promise} update - This function update an existing user
+ * @property {function(User):Promise<User>} add - This function write a new user in the database
+ * @property {function(User):Promise<User>} update - This function update an existing user
  * @property {function():Promise<User[]>} getUsers - This function return all registered users
  * @property {function(string):Promise<User>} getUserById - This function search and return that match with the given id
  */
@@ -41,24 +39,19 @@ export default class UserService {
      * @throws {Error} Invalid user email
      * @throws {Error} Invalid user pass
      * @throws {Error} The user is already registered
+     * 
+     * @returns {Promise<User>}
      */
     async addUser(req) {
         this.checkAddUserRequest(req)
 
         const user = {
-            id: uuid.v4(),
             name: req.name,
             email: req.email,
-            pass: req.pass,
-            createAt: new Date(),
-            updateAt: new Date()
+            pass: req.pass
         }
 
-        if (await this.userPersistence.exists({ email: user.email })) {
-            throw Error("The user is already registered")
-        }
-
-        await this.userPersistence.add(user)
+        return await this.userPersistence.add(user)
     }
 
     /**
@@ -76,15 +69,12 @@ export default class UserService {
      * @throws {Error} Invalid user email
      * @throws {Error} Invalid user pass
      * @throws {Error} the email is already in use
+     * 
+     * @returns {Promise<User>}
      */
     async updateUser(req) {
         this.checkUpdateUserRequest(req)
         
-        //req ? req.email : ''
-        if (await this.userPersistence.exists({ email: req?.email })) {
-            throw Error("the email is already in use")
-        }
-
         const validatedRequest = {
             id: req.id,
             name: req.name,
@@ -92,7 +82,7 @@ export default class UserService {
             pass: req.pass
         }
 
-        this.userPersistence.update(validatedRequest)
+        return await this.userPersistence.update(validatedRequest)
     }
 
     /**@private */

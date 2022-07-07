@@ -35,18 +35,6 @@ export default class CardPersistenceSqlRepository {
         throw new NotFound("Not found")
     }
 
-
-    /**
-     * @returns {Promise<Card[]>}
-     */
-    async all() {
-        const resultSet = await CardModel.findAll()
-
-        return resultSet.map((r) => {
-            return r.toCard()
-        })
-    }
-
     /**
      * @param {Card} criteria 
      * 

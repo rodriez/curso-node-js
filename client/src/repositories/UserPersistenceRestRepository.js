@@ -7,27 +7,27 @@ import got from 'got'
  * @implements {UserPersistence}
  */
 export default class UserPersistenceRestRepository {
-    /**
-     * @param {User} criteria 
-     * 
-     * @returns {Promise<boolean>}
-     */
-     async exists(criteria) {
-        
+
+    constructor(host) {
+        this.host = host
     }
 
     /**
      * @param {User} user 
      */
     async add(user) {
-        
+        const response = await got.post(`${this.host}/api/users`, {
+            json: user
+        })
+
+        return JSON.parse(response.body)
     }
 
     /**
      * @returns {Promise<User[]>}
      */
     async getUsers() {
-        const response = await got.get("http://localhost:3000/api/users")
+        const response = await got.get(`${this.host}/api/users`)
         
         return JSON.parse(response.body)
     }
@@ -36,9 +36,18 @@ export default class UserPersistenceRestRepository {
      * @param {User} req
      * 
      * @throws {Error} User not found 
+     * 
+     * @returns {Promise<User>}
      */
     async update(req) {
-        
+        const id = req.id
+        delete req.id
+
+        const response = await got.patch(`${this.host}/api/users/${id}`, {
+            json: req
+        })
+
+        return JSON.parse(response.body)
     }
 
     /**
@@ -47,6 +56,19 @@ export default class UserPersistenceRestRepository {
      * @returns {Promise<User>}
      */
     async getUserById(id) {
+        const response = await got.get(`${this.host}/api/users/${id}`)
+        
+        return JSON.parse(response.body)
+    }
 
+    /**
+     * @param {User} criteria 
+     * 
+     * @return {Promise<boolean>}
+     */
+    async exists(criteria) {
+        const user = await this.getUserById(`${criteria.id}`)
+
+        return (!user)
     }
 }

@@ -1,8 +1,10 @@
 import UserHandler from './handlers/UserHandler.js'
-//import CardHandler from './handlers/CardHandler.js'
+import CardHandler from './handlers/CardHandler.js'
 import { hideBin } from 'yargs/helpers'
 import yargs from 'yargs'
-//import DashboardHandler from './handlers/DashboardHandler.js'
+import DashboardHandler from './handlers/DashboardHandler.js'
+import dotenv from 'dotenv'
+dotenv.config()
 
 const app = yargs(hideBin(process.argv))
 //User Commands
@@ -11,13 +13,13 @@ const app = yargs(hideBin(process.argv))
 .command('changeUserPassword [id] [pass]','Change user password',{},UserHandler.changeUser)
 .command('changeUser [id] [name] [email]','Change user',{},UserHandler.changeUser)
 //Card Commands
-// .command('addCard [title] [description] [userId]', 'Register a new card.',{}, CardHandler.addCard)
-// .command('showCard [id]', 'Show one Card.',{}, CardHandler.showCard)
-// .command('moveToInProgress [id]', 'Move Card to In Progress Column.',{}, CardHandler.moveToInProgress)
-// .command('moveToPending [id]', 'Move Card to Pending Column.',{}, CardHandler.moveToPending)
-// .command('moveToDone [id]', 'Move Card to In Done Column.',{}, CardHandler.moveToDone)
-// //Dashboard Commands
-// .command('showDashboard [userId]', 'Show the dashboard.',{}, DashboardHandler.showDashboard)
+.command('addCard [title] [description] [userId]', 'Register a new card.',{}, CardHandler.addCard)
+.command('showCard [id]', 'Show one Card.',{}, CardHandler.showCard)
+.command('moveToInProgress [id]', 'Move Card to In Progress Column.',{}, CardHandler.moveToInProgress)
+.command('moveToPending [id]', 'Move Card to Pending Column.',{}, CardHandler.moveToPending)
+.command('moveToDone [id]', 'Move Card to In Done Column.',{}, CardHandler.moveToDone)
+//Dashboard Commands
+.command('showDashboard [userId]', 'Show the dashboard.',{}, DashboardHandler.showDashboard)
 
 
 try {

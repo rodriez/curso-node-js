@@ -1,10 +1,7 @@
-import dotenv from 'dotenv'
 import UserPersistenceRestRepository from '../repositories/UserPersistenceRestRepository.js';
 import UserService from "../services/UserService.js";
 
-dotenv.config()
-
-const userPersitenceRepo = new UserPersistenceRestRepository();
+const userPersitenceRepo = new UserPersistenceRestRepository(process.env.HOST);
 const userService = new UserService(userPersitenceRepo);
 
 export default class UserHandler {

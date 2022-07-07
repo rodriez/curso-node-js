@@ -1,9 +1,6 @@
 import * as uuid from 'uuid'
-import crypto from 'crypto'
 import BadRequest from '../errors/BadRequest.js'
 import NotFound from '../errors/NotFound.js'
-
-const SECRET = "mi-secreto"
 
 /**
  * @typedef {object} UserSearchCriteria
@@ -52,13 +49,11 @@ export default class UserService {
     async addUser(req) {
         this.checkAddUserRequest(req)
 
-        const hashPass = crypto.createHash('md5').update(`${SECRET}-${req.pass}`).digest('hex')
-
         const user = {
             id: uuid.v4(),
             name: req.name,
             email: req.email,
-            pass: hashPass,
+            pass: req.pass,
             createAt: new Date(),
             updateAt: new Date()
         }
