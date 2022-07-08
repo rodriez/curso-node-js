@@ -48,7 +48,13 @@ export default class DashboardService {
         if (req?.userId && !(await this.userPersistence.exists({id: req.userId}))) {
             throw Error("Invalid userId")
         } else if (req?.userId) {
-            cards = await this.cardPersistence.search({ userId: req.userId })
+            const criteria = {
+                user: {
+                    id: req.userId
+                }
+            }
+            
+            cards = await this.cardPersistence.search(criteria)
         } else {
             cards = await this.cardPersistence.all()
         }

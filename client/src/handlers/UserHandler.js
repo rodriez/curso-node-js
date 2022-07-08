@@ -12,6 +12,8 @@ export default class UserHandler {
     static async addUser(request){
         try {
             await userService.addUser(request)
+
+            await UserHandler.showUsers()
         } catch (e) {
             console.log(e.message)
         }
@@ -35,7 +37,7 @@ export default class UserHandler {
         try {
             await userService.updateUser(req)
             
-            UserHandler.showUsers()
+            await UserHandler.showUsers()
         } catch (error) {
             console.log(error.message)
         }

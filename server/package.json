@@ -18,8 +18,11 @@
   },
   "homepage": "https://github.com/rodriez/curso-node-js#readme",
   "dependencies": {
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "morgan": "^1.9.1",
     "mysql2": "^2.3.3",
     "sequelize": "^6.21.2"
   }

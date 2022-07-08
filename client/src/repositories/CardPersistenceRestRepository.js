@@ -17,19 +17,21 @@ export default class CardPersistenceRestRepository {
      * @returns {Promise<Card>}
      */
     async addCard(card) {
-        // @ts-ignore
-        card.user_id = card.userId
-        delete card.userId
+        const url = `${this.host}/api/cards`
+        const fn = async() => {
+            const response = await got.post(url, {
+                json: {
+                    title: card.title,
+                    description: card.description,
+                    user_id: card.user.id
+                }
+            })
+    
+            return JSON.parse(response.body)
+        }
 
-        const response = await got.post(`${this.host}/api/cards`, {
-            json: card
-        })
-
-        let result = JSON.parse(response.body)
-        result.userId = result.user_id
-        delete result.user_id
-        
-        return result
+        const result = await this.execute(fn)
+        return this.buildCard(result)
     }
 
     /**
@@ -40,18 +42,28 @@ export default class CardPersistenceRestRepository {
      * @returns {Promise<Card>}
      */
     async getCardById(id) {
-        const response = await got.get(`${this.host}/api/cards/${id}`)
+        const url = `${this.host}/api/cards/${id}`
+        const fn = async() => {
+            const response = await got.get(url)
+            return JSON.parse(response.body)
+        }
 
-        return JSON.parse(response.body)
+        const result = await this.execute(fn)
+        return this.buildCard(result)
     }
 
     /**
      * @returns {Promise<Card[]>}
      */
     async all() {
-        const response = await got.get(`${this.host}/api/cards`)
+        const url = `${this.host}/api/cards`
+        const fn = async() => {
+            const response = await got.get(url)
 
-        return JSON.parse(response.body)
+            return JSON.parse(response.body)
+        }
+        
+        return await this.execute(fn)
     }
 
     /**
@@ -61,13 +73,19 @@ export default class CardPersistenceRestRepository {
      * @returns {Promise<Card>}
      */
     async updateStatus(id, status) {
-        const response = await got.patch(`${this.host}/api/cards/${id}`, {
-            json: {
-                status: status
-            }
-        })
-
-        return JSON.parse(response.body)
+        const url = `${this.host}/api/cards/${id}`
+        const fn  = async() => {
+            const response = await got.patch(url, {
+                json: {
+                    status: status
+                }
+            })
+    
+            return JSON.parse(response.body)
+        }
+        
+        const result = await this.execute(fn)
+        return this.buildCard(result)
     }
 
     /**
@@ -77,13 +95,40 @@ export default class CardPersistenceRestRepository {
      */
     async search(criteria) {
         let url = `${this.host}/api/cards`
-        
-        if (criteria?.userId) {
-            url = `${url}?userId=${criteria.userId}`
+        const fn = async() => {
+            if (criteria?.user?.id) {
+                url = `${url}?userId=${criteria?.user?.id}`
+            }
+    
+            const response = await got.get(url)
+    
+            return JSON.parse(response.body)
         }
 
-        const response = await got.get(url)
+        return await this.execute(fn)
+    }
 
-        return JSON.parse(response.body)
+    /** @private */
+    buildCard(apiResponse) {
+        return {
+            id: apiResponse.id,
+            userId: apiResponse.user.id,
+            title: apiResponse.title,
+            description: apiResponse.description,
+            status: apiResponse.status,
+            user: apiResponse.user,
+            createAt: apiResponse.createAt,
+            updateAt: apiResponse.updateAt
+        }
+    }
+
+    /**@private */
+    async execute(fn) {
+        try {
+            return await fn()
+        } catch(e) {
+            const errorBody = JSON.parse(e.response.body)
+            throw Error(errorBody.error)
+        }
     }
 }

@@ -24,7 +24,9 @@ export default class CardPeristenceFileRepository {
     }
 
     /**
-     * @param {Card} card 
+     * @param {Card} card
+     * 
+     * @returns {Promise<Card>} 
      */
     async addCard(card) {
         this.collection.push(card)
@@ -33,6 +35,8 @@ export default class CardPeristenceFileRepository {
 
         // @ts-ignore
         this.eventEmitter.emit("card-created", card)
+
+        return card
     }
 
     /**@private */
@@ -101,6 +105,8 @@ export default class CardPeristenceFileRepository {
     /**
      * @param {string} id 
      * @param {string} status 
+     * 
+     * @returns {Promise<Card>}
      */
     async updateStatus(id, status) {
         const idx = lodash.findIndex(this.collection, { id: id })
@@ -111,6 +117,8 @@ export default class CardPeristenceFileRepository {
         this.save()
         // @ts-ignore
         this.eventEmitter.emit("card-updated", this.collection[idx])
+
+        return this.collection[idx]
     }
 
     /**

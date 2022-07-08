@@ -3,9 +3,17 @@ import express from 'express';
 import UserHandler from './handlers/UserHandler.js';
 import CardHandler from './handlers/CardHandler.js';
 import ErrorHandler from './handlers/ErrorHandler.js';
+import AuthorizationHandler from './handlers/AuthorizationHandler.js';
+import morgan from 'morgan'
+import compression from 'compression'
+import cors from 'cors'
 
 const app = express()
 app.use(express.json())
+app.use(morgan("dev"))
+app.use(compression())
+app.use(cors())
+app.use(AuthorizationHandler.checkAuth)
 
 //User Endpoints
 app.post("/api/users", UserHandler.addUser)

@@ -16,20 +16,30 @@ export default class UserPersistenceRestRepository {
      * @param {User} user 
      */
     async add(user) {
-        const response = await got.post(`${this.host}/api/users`, {
-            json: user
-        })
-
-        return JSON.parse(response.body)
+        const url = `${this.host}/api/users`
+        const fn = async () => {
+            const response = await got.post(url, {
+                json: user
+            })
+    
+            return JSON.parse(response.body)
+        }
+        
+        return await this.execute(fn)
     }
 
     /**
      * @returns {Promise<User[]>}
      */
     async getUsers() {
-        const response = await got.get(`${this.host}/api/users`)
+        const url = `${this.host}/api/users`
+        const fn = async () => {
+            const response = await got.get(url)
         
-        return JSON.parse(response.body)
+            return JSON.parse(response.body)
+        }
+
+        return await this.execute(fn)
     }
 
     /**
@@ -41,13 +51,18 @@ export default class UserPersistenceRestRepository {
      */
     async update(req) {
         const id = req.id
-        delete req.id
+        const url = `${this.host}/api/users/${id}`
+        const fn = async() => {
+            delete req.id
 
-        const response = await got.patch(`${this.host}/api/users/${id}`, {
-            json: req
-        })
+            const response = await got.patch(url, {
+                json: req
+            })
 
-        return JSON.parse(response.body)
+            return JSON.parse(response.body)
+        }
+
+        return await this.execute(fn)
     }
 
     /**
@@ -56,9 +71,14 @@ export default class UserPersistenceRestRepository {
      * @returns {Promise<User>}
      */
     async getUserById(id) {
-        const response = await got.get(`${this.host}/api/users/${id}`)
+        const url = `${this.host}/api/users/${id}`
+        const fn = async () => {
+            const response = await got.get(url)
         
-        return JSON.parse(response.body)
+            return JSON.parse(response.body)
+        }
+
+        return await this.execute(fn)
     }
 
     /**
@@ -70,5 +90,15 @@ export default class UserPersistenceRestRepository {
         const user = await this.getUserById(`${criteria.id}`)
 
         return (!user)
+    }
+
+    /**@private */
+    async execute(fn) {
+        try {
+            return await fn()
+        } catch(e) {
+            const errorBody = JSON.parse(e.response.body)
+            throw Error(errorBody.error)
+        }
     }
 }

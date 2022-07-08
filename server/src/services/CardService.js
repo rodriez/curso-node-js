@@ -77,7 +77,7 @@ export default class CardService {
 
         await this.cardPersistence.addCard(card)
 
-        return card
+        return await this.getCardById(card.id)
     }
 
     /**@private */

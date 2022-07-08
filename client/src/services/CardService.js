@@ -12,11 +12,10 @@ const validStatuses = [STATUS_PENDING, STATUS_IN_PROGRESS, STATUS_DONE]
  * 
  * @typedef {object} Card
  * @property {string=} id
- * @property {string=} userId
  * @property {string=} title
  * @property {string=} description
  * @property {string=} status
- * @property {User=} user
+ * @property {User} user
  * @property {Date=} createAt
  * @property {Date=} updateAt
  * 
@@ -62,7 +61,9 @@ export default class CardService {
         this.checkAddCardRequest(req)
 
         const card = {
-            userId: req.userId,
+            user: {
+                id: req.userId
+            },
             title: req.title,
             description: req.description
         }
@@ -94,9 +95,7 @@ export default class CardService {
      * @returns {Promise<Card>}
      */
     async getCardById(id) {
-        const card = await this.cardPersistence.getCardById(id)
-
-        return card
+        return await this.cardPersistence.getCardById(id)
     }
 
     /**

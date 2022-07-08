@@ -56,6 +56,7 @@ export default class UserHandler {
     }
 
     static showUsers(req, res, next) {
+        console.log(JSON.stringify(req.headers))
         userService.getUsers()
             .then((users) => {
                 const presentableUsers = users.map(u => {

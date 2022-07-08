@@ -1,10 +1,9 @@
+import './env.js'
 import UserHandler from './handlers/UserHandler.js'
 import CardHandler from './handlers/CardHandler.js'
 import { hideBin } from 'yargs/helpers'
 import yargs from 'yargs'
 import DashboardHandler from './handlers/DashboardHandler.js'
-import dotenv from 'dotenv'
-dotenv.config()
 
 const app = yargs(hideBin(process.argv))
 //User Commands

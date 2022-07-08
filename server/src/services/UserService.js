@@ -176,11 +176,4 @@ export default class UserService {
 
         return user
     }
-
-    async login(req) {
-        const hashPass = crypto.createHash('md5').update(`${SECRET}-${req.pass}`).digest('hex')
-
-        // @ts-ignore
-        return await this.userPersistence.getUserByEmailAndPass(req.email, hashPass)
-    }
 }

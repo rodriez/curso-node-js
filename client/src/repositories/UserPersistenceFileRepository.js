@@ -37,11 +37,15 @@ export default class UserPeristenceFileRepository {
 
     /**
      * @param {User} user 
+     * 
+     * @returns {Promise<User>}
      */
     async add(user) {
         this.collection.push(user)
 
         this.save()
+
+        return user
     }
 
     /**
@@ -69,6 +73,8 @@ export default class UserPeristenceFileRepository {
      * @param {User} req
      * 
      * @throws {Error} User not found 
+     * 
+     * @returns {Promise<User>}
      */
     async update(req) {
         const idx = lodash.findIndex(this.collection, { id: req.id })
@@ -80,6 +86,8 @@ export default class UserPeristenceFileRepository {
         this.collection[idx].pass = req.pass ? req.pass : this.collection[idx].pass
 
         this.save()
+
+        return this.collection[idx]
     }
 
     /**@private */
@@ -95,9 +103,9 @@ export default class UserPeristenceFileRepository {
     /**
      * @param {string} id 
      * 
-     * @returns {User}
+     * @returns {Promise<User>}
      */
-    getUserById(id) {
+    async getUserById(id) {
         const idx = lodash.findIndex(this.collection, { id: id })
 
         return this.collection[idx]

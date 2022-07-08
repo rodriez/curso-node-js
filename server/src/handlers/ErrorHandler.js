@@ -14,6 +14,9 @@ export default class ErrorHandler {
             case 'NotFound':
                 res.status(404).json({error: err.message})
                 break;
+            case 'Forbidden':
+                res.status(403).json({error: err.message})
+                break;
             default:
                 res.status(500).json({error: err.message})
                 break;
