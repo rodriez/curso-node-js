@@ -1,18 +1,42 @@
-import Forbbiden from '../errors/Forbidden.js';
+import Unauthorized from '../errors/Unauthorized.js';
+import JsonWebTokenRepository from '../repositories/JsonWebTokenRepository.js';
+import UserPersistenceSqlRepository from '../repositories/UserPersistenceSqlRepository.js';
+import AuthorizationService from '../services/AuthorizationService.js';
+
+const userPersistence = new UserPersistenceSqlRepository()
+const tokenRepository = new JsonWebTokenRepository(`${process.env.JWT_SECRET}`, `${process.env.JWT_ALGORITHM}`, `${process.env.JWT_DURATION}`)
+const authService = new AuthorizationService(userPersistence, tokenRepository)
 
 export default class AuthorizationHandler {
 
     static checkAuth(req, res, next) {
-        if (req.headers.authorization != undefined || `${req.headers.authorization}`.indexOf("Basic") >= 0) {
-            const hash = `${req.headers.authorization}`.replace("Basic ", "")
-            const credentials = Buffer.from(hash, 'base64').toString().split(":")
-    
-            if (credentials[0] === "root" && credentials[1] === "12345") {
-                return next()
+        try {
+            if (!req?.headers?.authorization) {
+                throw new Unauthorized("Invalid token")
             }
+
+            const [authType, authHash] = `${req.headers.authorization}`.trim().split(" ")
+            switch (authType) {
+                case 'Bearer': 
+                    authService.validateToken(authHash)
+                    return next()
+                case "Basic":
+                    if (req.path == '/api/login') {
+                        req.basicCredentials = authService.parseCredentials(authHash)
+                        return next()
+                    }
+                default: throw new Unauthorized("Invalid token")
+            }
+
+        } catch(e) {
+            next(e)
         }
-    
-        next(new Forbbiden("You are not authorized to access this information"))
+    }
+
+    static login(req, res, next) {
+        authService.login(req.basicCredentials)
+            .then(token => res.status(200).json({token}))
+            .catch(next)
     }
 
 }

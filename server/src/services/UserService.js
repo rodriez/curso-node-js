@@ -22,6 +22,7 @@ import NotFound from '../errors/NotFound.js'
  * @property {function(string):Promise} deleteUser - This function delete an existing user
  * @property {function():Promise<User[]>} getUsers - This function return all registered users
  * @property {function(string):Promise<User|undefined>} getUserById - This function search and return that match with the given id
+ * @property {function(UserSearchCriteria):Promise<User|undefined>} find - This function search and return that match with the given criteria
  */
 export default class UserService {
     

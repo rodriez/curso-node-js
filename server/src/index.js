@@ -15,6 +15,9 @@ app.use(compression())
 app.use(cors())
 app.use(AuthorizationHandler.checkAuth)
 
+//Auth Endpoints
+app.get("/api/login", AuthorizationHandler.login)
+
 //User Endpoints
 app.post("/api/users", UserHandler.addUser)
 app.get("/api/users", UserHandler.showUsers)

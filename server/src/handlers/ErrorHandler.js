@@ -17,6 +17,9 @@ export default class ErrorHandler {
             case 'Forbidden':
                 res.status(403).json({error: err.message})
                 break;
+            case 'Unauthorized':
+                res.status(401).json({error: err.message})
+                break;
             default:
                 res.status(500).json({error: err.message})
                 break;

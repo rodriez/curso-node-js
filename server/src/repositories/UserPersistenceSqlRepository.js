@@ -78,4 +78,17 @@ export default class UserPersistenceSqlRepository {
             }
         })
     }
+
+    /**
+     * @param {import('../services/UserService').UserSearchCriteria} criteria 
+     * 
+     * @returns {Promise<User|undefined>}
+     */
+     async find(criteria) {
+        const row = await UserModel.findOne({
+            where: criteria
+        })
+
+        return row?.toUser()
+    }
 }
