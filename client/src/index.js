@@ -4,8 +4,11 @@ import CardHandler from './handlers/CardHandler.js'
 import { hideBin } from 'yargs/helpers'
 import yargs from 'yargs'
 import DashboardHandler from './handlers/DashboardHandler.js'
+import AuthHandler from './handlers/AuthHandler.js'
 
 const app = yargs(hideBin(process.argv))
+//Login Command
+.command('login [email] [pass]', 'Initialized a new session.',{}, AuthHandler.login)
 //User Commands
 .command('addUser [name] [email] [pass]', 'Register a new user.',{}, UserHandler.addUser)
 .command('showUsers', 'Show all users.',{}, UserHandler.showUsers)

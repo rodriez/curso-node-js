@@ -1,7 +1,9 @@
 import UserPersistenceRestRepository from '../repositories/UserPersistenceRestRepository.js';
 import UserService from "../services/UserService.js";
+import AuthRepository from '../repositories/AuthRepository.js';
 
-const userPersitenceRepo = new UserPersistenceRestRepository(process.env.HOST);
+const authRepository = new AuthRepository(`${process.env.HOST}`, `${process.env.CREDENTIALS_FILE}`)
+const userPersitenceRepo = new UserPersistenceRestRepository(`${process.env.HOST}`, authRepository);
 const userService = new UserService(userPersitenceRepo);
 
 export default class UserHandler {

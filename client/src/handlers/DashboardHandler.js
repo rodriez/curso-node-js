@@ -2,9 +2,11 @@ import DashboardService from "../services/DashboardService.js"
 import DashboardPresenterRepository from "../repositories/DashboardPresenterRepository.js"
 import CardPersistenceRestRepository from "../repositories/CardPersistenceRestRepository.js"
 import UserPersistenceRestRepository from "../repositories/UserPersistenceRestRepository.js"
+import AuthRepository from '../repositories/AuthRepository.js'
 
-const cardPersistence = new CardPersistenceRestRepository(process.env.HOST)
-const userPersistence = new UserPersistenceRestRepository(process.env.HOST)
+const authRepository = new AuthRepository(`${process.env.HOST}`, `${process.env.CREDENTIALS_FILE}`)
+const cardPersistence = new CardPersistenceRestRepository(`${process.env.HOST}`, authRepository)
+const userPersistence = new UserPersistenceRestRepository(`${process.env.HOST}`, authRepository)
 const dashboardPresenter = new DashboardPresenterRepository()
 const service = new DashboardService(cardPersistence, dashboardPresenter, userPersistence)
 

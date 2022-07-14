@@ -3,12 +3,22 @@ import got from 'got'
 /**
  * @typedef {import('../services/CardService').Card} Card
  * @typedef {import('../services/CardService').CardPersistence} CardPersistence
+ * @typedef {import('../services/AuthService').AuthRepository} AuthRepository
+ * 
  * @implements {CardPersistence}
  */
 export default class CardPersistenceRestRepository {
     
-    constructor(host) {
+    /**
+     * 
+     * @param {string} host 
+     * @param {AuthRepository} authRepository
+     * @param {import('events').EventEmitter=} eventEmitter 
+     */
+    constructor(host, authRepository, eventEmitter) {
         this.host = host
+        this.authRepository = authRepository
+        this.eventEmitter = eventEmitter
     }
 
     /**
@@ -17,6 +27,7 @@ export default class CardPersistenceRestRepository {
      * @returns {Promise<Card>}
      */
     async addCard(card) {
+        const creds = this.authRepository.readCredentials()
         const url = `${this.host}/api/cards`
         const fn = async() => {
             const response = await got.post(url, {
@@ -24,6 +35,9 @@ export default class CardPersistenceRestRepository {
                     title: card.title,
                     description: card.description,
                     user_id: card.user.id
+                },
+                headers: {
+                    authorization: `Bearer ${creds.token}`
                 }
             })
     
@@ -31,7 +45,11 @@ export default class CardPersistenceRestRepository {
         }
 
         const result = await this.execute(fn)
-        return this.buildCard(result)
+        const response = this.buildCard(result)
+        // @ts-ignore
+        this.eventEmitter.emit("card-created", response)
+
+        return response
     }
 
     /**
@@ -42,9 +60,14 @@ export default class CardPersistenceRestRepository {
      * @returns {Promise<Card>}
      */
     async getCardById(id) {
+        const creds = this.authRepository.readCredentials()
         const url = `${this.host}/api/cards/${id}`
         const fn = async() => {
-            const response = await got.get(url)
+            const response = await got.get(url, {
+                headers: {
+                    authorization: `Bearer ${creds.token}`
+                }
+            })
             return JSON.parse(response.body)
         }
 
@@ -56,9 +79,14 @@ export default class CardPersistenceRestRepository {
      * @returns {Promise<Card[]>}
      */
     async all() {
+        const creds = this.authRepository.readCredentials()
         const url = `${this.host}/api/cards`
         const fn = async() => {
-            const response = await got.get(url)
+            const response = await got.get(url, {
+                headers: {
+                    authorization: `Bearer ${creds.token}`
+                }
+            })
 
             return JSON.parse(response.body)
         }
@@ -73,11 +101,15 @@ export default class CardPersistenceRestRepository {
      * @returns {Promise<Card>}
      */
     async updateStatus(id, status) {
+        const creds = this.authRepository.readCredentials()
         const url = `${this.host}/api/cards/${id}`
         const fn  = async() => {
             const response = await got.patch(url, {
                 json: {
                     status: status
+                },
+                headers: {
+                    authorization: `Bearer ${creds.token}`
                 }
             })
     
@@ -85,7 +117,12 @@ export default class CardPersistenceRestRepository {
         }
         
         const result = await this.execute(fn)
-        return this.buildCard(result)
+        const response = this.buildCard(result)
+
+        // @ts-ignore
+        this.eventEmitter.emit("card-updated", response)
+
+        return response
     }
 
     /**
@@ -94,13 +131,18 @@ export default class CardPersistenceRestRepository {
      * @returns {Promise<Card[]>}
      */
     async search(criteria) {
+        const creds = this.authRepository.readCredentials()
         let url = `${this.host}/api/cards`
         const fn = async() => {
             if (criteria?.user?.id) {
                 url = `${url}?userId=${criteria?.user?.id}`
             }
     
-            const response = await got.get(url)
+            const response = await got.get(url, {
+                headers: {
+                    authorization: `Bearer ${creds.token}`
+                }
+            })
     
             return JSON.parse(response.body)
         }
