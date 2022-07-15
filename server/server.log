@@ -1,0 +1,49 @@
+2022-07-15-19:13:44 - info - Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'test'
+2022-07-15-19:13:44 - info - Executing (default): SHOW INDEX FROM `users`
+2022-07-15-19:13:44 - info - Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'cards' AND TABLE_SCHEMA = 'test'
+2022-07-15-19:13:44 - info - Executing (default): SHOW INDEX FROM `cards`
+2022-07-15-19:18:27 - info - Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'test'
+2022-07-15-19:18:27 - info - Executing (default): SHOW INDEX FROM `users`
+2022-07-15-19:18:27 - info - Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'cards' AND TABLE_SCHEMA = 'test'
+2022-07-15-19:18:27 - info - Executing (default): SHOW INDEX FROM `cards`
+2022-07-15-19:20:00 - info - ::ffff:127.0.0.1 pablo@test.com GET /api/login HTTP/1.1 200 249 - 9.477 ms
+
+2022-07-15-19:31:59 - error - BAD_REQUEST - Empty title
+2022-07-15-19:31:59 - info - ::ffff:127.0.0.1 - POST /api/cards HTTP/1.1 400 25 - 3.855 ms
+
+2022-07-15-19:32:54 - info - ::ffff:127.0.0.1 - POST /api/cards HTTP/1.1 201 151 - 19.490 ms
+
+2022-07-15-19:33:07 - info - ::ffff:127.0.0.1 - POST /api/cards HTTP/1.1 201 242 - 6.982 ms
+
+2022-07-15-19:33:15 - info - ::ffff:127.0.0.1 - POST /api/cards HTTP/1.1 201 239 - 5.531 ms
+
+2022-07-15-19:35:26 - info - ::ffff:127.0.0.1 - POST /api/cards HTTP/1.1 201 239 - 14.504 ms
+
+2022-07-15-19:35:49 - debug - Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'test'
+2022-07-15-19:35:49 - debug - Executing (default): SHOW INDEX FROM `users`
+2022-07-15-19:35:49 - debug - Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'cards' AND TABLE_SCHEMA = 'test'
+2022-07-15-19:35:49 - debug - Executing (default): SHOW INDEX FROM `cards`
+2022-07-15-19:35:51 - debug - addCard - REQUEST - [object Object]
+2022-07-15-19:35:51 - debug - addCard - CARD - [object Object]
+2022-07-15-19:35:51 - debug - Executing (default): INSERT INTO `cards` (`id`,`user_id`,`description`,`status`,`createdAt`,`updatedAt`) VALUES (?,?,?,?,?,?);
+2022-07-15-19:35:51 - debug - Executing (default): SELECT `id`, `user_id`, `title`, `description`, `status`, `createdAt`, `updatedAt` FROM `cards` AS `card` WHERE `card`.`id` = '2428e0c6';
+2022-07-15-19:35:51 - debug - Executing (default): SELECT `id`, `name`, `email`, `pass`, `createdAt`, `updatedAt` FROM `users` AS `user` WHERE `user`.`id` = '9e1b6ede-f965-4daa-9c77-9f931247b78e';
+2022-07-15-19:35:51 - info - ::ffff:127.0.0.1 - POST /api/cards HTTP/1.1 201 239 - 14.013 ms
+
+2022-07-15-19:36:50 - debug - Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'test'
+2022-07-15-19:36:50 - debug - Executing (default): SHOW INDEX FROM `users`
+2022-07-15-19:36:50 - debug - Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'cards' AND TABLE_SCHEMA = 'test'
+2022-07-15-19:36:50 - debug - Executing (default): SHOW INDEX FROM `cards`
+2022-07-15-19:36:54 - debug - addCard - REQUEST - {"description":"....","userId":"9e1b6ede-f965-4daa-9c77-9f931247b78e"}
+2022-07-15-19:36:54 - debug - addCard - CARD - {"id":"b508d689","userId":"9e1b6ede-f965-4daa-9c77-9f931247b78e","description":"....","status":"Pending","createAt":"2022-07-15T22:36:54.344Z","updateAt":"2022-07-15T22:36:54.344Z"}
+2022-07-15-19:36:54 - debug - Executing (default): INSERT INTO `cards` (`id`,`user_id`,`description`,`status`,`createdAt`,`updatedAt`) VALUES (?,?,?,?,?,?);
+2022-07-15-19:36:54 - debug - Executing (default): SELECT `id`, `user_id`, `title`, `description`, `status`, `createdAt`, `updatedAt` FROM `cards` AS `card` WHERE `card`.`id` = 'b508d689';
+2022-07-15-19:36:54 - debug - Executing (default): SELECT `id`, `name`, `email`, `pass`, `createdAt`, `updatedAt` FROM `users` AS `user` WHERE `user`.`id` = '9e1b6ede-f965-4daa-9c77-9f931247b78e';
+2022-07-15-19:36:54 - info - ::ffff:127.0.0.1 - POST /api/cards HTTP/1.1 201 239 - 15.278 ms
+
+2022-07-15-19:37:58 - debug - Executing (default): SELECT `id`, `name`, `email`, `pass`, `createdAt`, `updatedAt` FROM `users` AS `user` WHERE `user`.`email` = 'pablo@test.com' AND `user`.`pass` = '12345' LIMIT 1;
+2022-07-15-19:37:58 - info - ::ffff:127.0.0.1 pablo@test.com GET /api/login HTTP/1.1 200 249 - 5.617 ms
+
+2022-07-15-19:38:00 - debug - Executing (default): SELECT `id`, `user_id`, `title`, `description`, `status`, `createdAt`, `updatedAt` FROM `cards` AS `card`;
+2022-07-15-19:38:00 - info - ::ffff:127.0.0.1 - GET /api/cards HTTP/1.1 200 - - 3.308 ms
+

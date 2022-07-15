@@ -1,5 +1,6 @@
 import Forbbiden from '../errors/Forbidden.js'
 import Unauthorized from '../errors/Unauthorized.js'
+import logger from '../logger.js'
 
 /**
  * @typedef {import('buffer').Buffer} Buffer
@@ -55,6 +56,8 @@ export default class AuthorizationService {
         const user = await this.userPersistence.find(req)
 
         if (!user) {
+            logger.error(`FORBIDDEN - User not found - ${req.email}`)
+
             throw new Forbbiden("Invalid credentials")
         }
 
@@ -64,6 +67,8 @@ export default class AuthorizationService {
     /**@private */
     checkLoginRequest(req) {
         if (req?.email === "" || req?.pass === "") {
+            logger.error("FORBIDDEN - Invalid credentials received: empty email or pass")
+
             throw new Forbbiden("Invalid credentials")
         }
     }
@@ -74,13 +79,15 @@ export default class AuthorizationService {
      */
     validateToken(token) {
         if (token === "") {
+            logger.error("UNAUTHORIZED - Empty Token received")
+
             throw new Unauthorized("Invalid Token")
         }
 
         try {
             this.tokenRepository.validate(token)
         } catch(e) {
-            console.error(`An invalid token was received: ${e.message}`)
+            logger.error(`${e.name} - An invalid token was received: ${e.message}`)
 
             throw new Unauthorized("Invalid Token")
         }

@@ -1,6 +1,7 @@
 import * as uuid from 'uuid'
 import BadRequest from '../errors/BadRequest.js'
 import NotFound from '../errors/NotFound.js'
+import logger from '../logger.js'
 
 export const STATUS_PENDING = "Pending"
 export const STATUS_DONE = "Done"
@@ -62,7 +63,7 @@ export default class CardService {
      * @returns {Promise<Card>}
      */
     async addCard(req) {
-
+        logger.info(`/server/src/services/CardService.addCard - REQUEST - ${req.title}`)
         this.checkAddCardRequest(req)
 
         const card = {
@@ -75,6 +76,8 @@ export default class CardService {
             updateAt: new Date()
         }
 
+        logger.debug(`addCard - CARD - ${JSON.stringify(card)}`)
+
         await this.cardPersistence.addCard(card)
 
         return await this.getCardById(card.id)
@@ -83,14 +86,19 @@ export default class CardService {
     /**@private */
     checkAddCardRequest(req) {
         if (req?.title === "") {
+            logger.error("BAD_REQUEST - Empty title")
+            
             throw new BadRequest("Invalid title")
         }
 
         if (req?.description === "") {
+            logger.error("BAD_REQUEST - Empty description")
+
             throw new BadRequest("Invalid description")
         }
 
         if (req?.userId === "") {
+            logger.error("BAD_REQUEST - Empty userId")
 
             throw new BadRequest("Invalid userId")
         }

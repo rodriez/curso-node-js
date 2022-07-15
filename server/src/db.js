@@ -1,15 +1,13 @@
 import { Sequelize } from "sequelize";
 import CardModel from "./model/CardModel.js";
 import UserModel from "./model/UserModel.js";
-import dotenv from 'dotenv'
-
-dotenv.config()
+import {sequelizeStream} from "./logger.js";
 
 const sequelize = new Sequelize(`${process.env.DB_NAME}`, `${process.env.DB_USER}`, `${process.env.DB_PASS}`, {
     host: `${process.env.DB_HOST}`,
     port: parseInt(`${process.env.DB_PORT}`, 10),
     dialect: "mysql",
-    logging: true 
+    logging: sequelizeStream 
 })
 
 CardModel.init(sequelize)

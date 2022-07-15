@@ -26,6 +26,7 @@
     "moment": "^2.29.4",
     "morgan": "^1.9.1",
     "mysql2": "^2.3.3",
-    "sequelize": "^6.21.2"
+    "sequelize": "^6.21.2",
+    "winston": "^3.8.1"
   }
 }
