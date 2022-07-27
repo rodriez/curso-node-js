@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
   },
   "repository": {
     "type": "git",
@@ -28,5 +28,8 @@
     "mysql2": "^2.3.3",
     "sequelize": "^6.21.2",
     "winston": "^3.8.1"
+  },
+  "devDependencies": {
+    "jest": "^28.1.3"
   }
 }

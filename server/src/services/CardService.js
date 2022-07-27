@@ -85,19 +85,19 @@ export default class CardService {
 
     /**@private */
     checkAddCardRequest(req) {
-        if (req?.title === "") {
+        if (!req.title || req?.title === "") {
             logger.error("BAD_REQUEST - Empty title")
             
             throw new BadRequest("Invalid title")
         }
 
-        if (req?.description === "") {
+        if (!req.description || req?.description === "") {
             logger.error("BAD_REQUEST - Empty description")
 
             throw new BadRequest("Invalid description")
         }
 
-        if (req?.userId === "") {
+        if (!req.userId || req?.userId === "") {
             logger.error("BAD_REQUEST - Empty userId")
 
             throw new BadRequest("Invalid userId")
