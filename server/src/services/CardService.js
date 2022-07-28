@@ -1,5 +1,6 @@
 import * as uuid from 'uuid'
 import BadRequest from '../errors/BadRequest.js'
+import InternalError from '../errors/InternalError.js'
 import NotFound from '../errors/NotFound.js'
 import logger from '../logger.js'
 
@@ -78,12 +79,17 @@ export default class CardService {
 
         logger.debug(`addCard - CARD - ${JSON.stringify(card)}`)
 
-        await this.cardPersistence.addCard(card)
+        try {
+            await this.cardPersistence.addCard(card)
 
-        return await this.getCardById(card.id)
+            return await this.getCardById(card.id)
+        } catch(e) {
+            logger.error(`Error adding card ${e.message}`)
+
+            throw new InternalError("Oops something were wrong!!!")
+        }
     }
 
-    /**@private */
     checkAddCardRequest(req) {
         if (!req.title || req?.title === "") {
             logger.error("BAD_REQUEST - Empty title")
@@ -115,15 +121,18 @@ export default class CardService {
         const card = await this.cardPersistence.getCardById(id)
         const user = await this.userService.getUserById(`${card.userId}`)
 
-        //NOTE: La funcion delete tiene un Syntatic Sugar para evitar escribir los parentesis 
-        delete card.userId
-        delete user?.pass
-        delete user?.createAt
-        delete user?.updateAt
-
-        card.user = user
-
-        return card
+        return {
+            id: card.id,
+            title: card.title,
+            description: card.description,
+            user: {
+                id: user?.id,
+                name: user?.name,
+                email: user?.email
+            },
+            createAt: card.createAt,
+            updateAt: card.updateAt
+        }
     }
 
     /**
