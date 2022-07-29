@@ -79,11 +79,16 @@ export default class CardService {
 
         logger.debug(`addCard - CARD - ${JSON.stringify(card)}`)
 
+        await this.doAddCard(card)
+
+        return await this.getCardById(card.id)
+    }
+
+    /** @private */
+    async doAddCard(card) {
         try {
             await this.cardPersistence.addCard(card)
-
-            return await this.getCardById(card.id)
-        } catch(e) {
+        } catch (e) {
             logger.error(`Error adding card ${e.message}`)
 
             throw new InternalError("Oops something were wrong!!!")
@@ -118,8 +123,12 @@ export default class CardService {
      * @returns {Promise<Card>}
      */
     async getCardById(id) {
+        if (!id) {
+            throw new BadRequest("Invalid id")
+        }
+
         const card = await this.cardPersistence.getCardById(id)
-        const user = await this.userService.getUserById(`${card.userId}`)
+        const user = await this.getUserById(card.userId)
 
         return {
             id: card.id,
@@ -135,6 +144,16 @@ export default class CardService {
         }
     }
 
+    /** @private */
+    async getUserById(userId) {
+        try {
+            return await this.userService.getUserById(`${userId}`)
+        } catch (e) {
+            logger.error(`Error getting user ${e.message}`)
+            throw new InternalError("Oops something were wrong!!!")
+        }
+    }
+
     /**
      * Return all registered cards
      * Creation and last update date are not included in the result
@@ -144,9 +163,21 @@ export default class CardService {
      * @returns {Promise<Card[]>}
      */
     async getCards(criteria) {
-        const allCards = await this.cardPersistence.search(criteria)
+        this.checkGetCardsCriteria(criteria)
 
-        return allCards
+        try {
+            return await this.cardPersistence.search(criteria)
+        } catch (e) {
+            logger.error(`Error trying to search cards ${e.message}`)
+            throw new InternalError("Oops something were wrong!!!")
+        }
+    }
+
+    /**@private */
+    checkGetCardsCriteria(criteria) {
+        if (criteria.id != undefined && !criteria.id) {
+            throw new BadRequest("Invalid id")
+        }
     }
 
     /**

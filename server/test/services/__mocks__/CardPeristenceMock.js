@@ -19,6 +19,14 @@ export default class CardPersistenceMock {
         return this.card
     }
 
+    search(criteria) {
+        if (this.error) {
+            throw this.error
+        }
+
+        return this.card;
+    } 
+
     clean() {
         this.card = null
         this.error = null
